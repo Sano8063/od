@@ -1,0 +1,13 @@
+{
+  "name": "od-dili",
+  "version": "0.3.0",
+  "description": "Od — Azərbaycan dilində proqramlaşdırma dili və brauzer redaktoru",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node --test tests/od.test.js"
+  },
+  "keywords": ["azerbaijani", "azərbaycan", "programming-language", "education", "transpiler"],
+  "author": "Hasan Allahverdi (Sano)",
+  "license": "MIT",
+  "engines": { "node": ">=18" }
+}
