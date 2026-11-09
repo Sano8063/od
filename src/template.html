@@ -85,6 +85,8 @@ main{flex:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap
 /* əlifba */
 .motto{font-size:13px;color:var(--fire2);font-weight:600;padding:6px 12px;border:1px dashed #ff6a2b66;border-radius:10px;cursor:pointer;background:#ff6a2b10}
 .motto:hover{background:#ff6a2b22}
+.motto .short{display:none}
+@media (max-width:1700px){.motto .long{display:none}.motto .short{display:inline}}
 #abc{position:fixed;inset:0;background:#07080bcc;backdrop-filter:blur(6px);display:none;z-index:50;overflow:auto;padding:28px 18px}
 #abc.on{display:block}
 .abc-in{max-width:1100px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px 28px}
@@ -106,10 +108,51 @@ main{flex:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap
 .abc-close{float:right}
 .total{display:inline-block;margin-top:4px;font-size:13px;color:var(--muted)}
 .total b{color:var(--text)}
+/* dərslər */
+#lessonsBtn.on{background:linear-gradient(135deg,#2b6cff,#5b8cff);border:none;color:#fff}
+.right .card.ref{}
+body.lessons .card.ref{display:none}
+body.lessons #lessonCard{display:flex}
+#lessonCard{display:none;flex:1.25;min-height:0}
+body.lessons .right>.card.out{flex:0.9}
+.lbody{overflow:auto;padding:16px 18px 18px;flex:1}
+.lhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lnum{font-size:12px;font-weight:800;color:#8fb0ff;background:#2b6cff22;border:1px solid #2b6cff55;padding:4px 9px;border-radius:999px}
+.lhead h2{margin:0;font-size:21px;font-weight:800}
+.ltopic{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.dots{display:flex;gap:5px;margin:12px 0 4px;flex-wrap:wrap}
+.dots button{width:28px;height:28px;padding:0;border-radius:8px;font-size:12px;font-weight:800;background:var(--panel2);color:var(--muted)}
+.dots button.done{background:#16a34a33;border-color:#22c55e88;color:#7be495}
+.dots button.cur{outline:2px solid #5b8cff;color:var(--text)}
+.lbody p{color:#c9cfdc;line-height:1.65;margin:10px 0;font-size:14.5px}
+.lbody code{font-family:var(--mono);font-size:13px;background:#0f1218;border:1px solid var(--line);padding:1px 6px;border-radius:6px;color:var(--fire2)}
+.lex{position:relative;margin:12px 0}
+.lex pre{margin:0;background:#0f1218;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:13px;line-height:1.6;overflow:auto;color:var(--text)}
+.lex button{position:absolute;top:8px;right:8px;font-size:12px;padding:5px 9px}
+.ltask{margin-top:14px;padding:12px 14px;border-radius:12px;background:#ff6a2b12;border:1px solid #ff6a2b55}
+.ltask b.t{display:block;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--fire2);margin-bottom:6px}
+.ltask p{margin:0}
+.lbtns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.lbtns .check{background:linear-gradient(135deg,#16a34a,#22c55e);border:none;color:#04210f}
+.lbtns .next{background:linear-gradient(135deg,#2b6cff,#5b8cff);border:none;color:#fff}
+.lres{margin-top:12px;font-size:13.5px}
+.lres .tr{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:9px;background:var(--panel2);margin:6px 0;border:1px solid var(--line)}
+.lres .tr.ok{border-color:#22c55e66}
+.lres .tr.bad{border-color:#ff547066}
+.lres .tr pre{margin:2px 0 0;font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;color:#c9cfdc}
+.lres .tr small{color:var(--muted)}
+.lres .big{font-size:16px;font-weight:800;margin:8px 0}
+.lres .big.ok{color:#7be495}.lres .big.bad{color:#ff8fa3}
+.lhint{margin-top:10px;padding:10px 12px;border-radius:10px;background:#ffd2401a;border:1px dashed #ffd24066;font-size:13.5px;color:#ffe08a;white-space:pre-wrap;font-family:var(--mono)}
+#cert{position:fixed;inset:0;background:#07080bcc;backdrop-filter:blur(6px);display:none;z-index:60;overflow:auto;padding:28px 18px}
+#cert.on{display:block}
+#cert .in{max-width:900px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
+#cert canvas{width:100%;height:auto;border-radius:12px;display:block;margin-top:12px}
+#cert input{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font:600 15px var(--sans);min-width:240px}
 footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#22c55e;color:#03210f;font-weight:700;padding:9px 16px;border-radius:10px;opacity:0;transition:.25s;pointer-events:none}
 .toast.on{opacity:1}
-@media (max-width:900px){.motto{order:5;width:100%;text-align:center}main{grid-template-columns:1fr}.editor{min-height:320px}.right>.card:first-child{flex:none !important;height:420px}}
+@media (max-width:900px){.motto{order:5;width:100%;text-align:center}main{grid-template-columns:1fr;min-height:auto;flex:none}.editor{min-height:320px}.right>.card.out{flex:none !important;height:420px}#lessonCard{flex:none !important}.lbody{overflow:visible}}
 </style>
 </head>
 <body>
@@ -118,9 +161,10 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
     <div class="flame">🔥</div>
     <div><h1>Od</h1><small>Azərbaycan dilində proqramlaşdırma 🇦🇿</small></div>
   </div>
-  <div class="motto" id="mottoBtn" title="Od əlifbasını aç">🔤 Biz hərfləri qururuq — sözləri və cümlələri siz yazırsınız</div>
+  <div class="motto" id="mottoBtn" title="Biz hərfləri qururuq — sözləri və cümlələri siz yazırsınız">🔤 <span class="long">Biz hərfləri qururuq — sözləri və cümlələri siz yazırsınız</span><span class="short">Od əlifbası</span></div>
   <div class="spacer"></div>
   <select id="examples" aria-label="Nümunələr"></select>
+  <button id="lessonsBtn" title="10 dərslik interaktiv kurs">📘 Dərslər</button>
   <button id="copyBtn" title="Kodu kopyala">📋 Kopyala</button>
   <button id="stopBtn" class="stop" disabled>■ Dayandır</button>
   <button id="runBtn" class="run">▶ İşə sal <span class="kbd">Ctrl+Enter</span></button>
@@ -139,7 +183,8 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
   </section>
 
   <section class="right">
-    <div class="card" style="flex:1">
+    <div class="card" id="lessonCard"><div class="card-h">📘 Od Dərslik — proqramlaşdırmanın əsasları</div><div class="lbody" id="lbody"></div></div>
+    <div class="card out" style="flex:1">
       <div class="card-h">
         <div class="tabs">
           <button class="tab on" data-tab="console">💬 Konsol</button>
@@ -157,7 +202,7 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
         <pre id="jsView"></pre>
       </div>
     </div>
-    <div class="card">
+    <div class="card ref">
       <div class="card-h">📖 Lüğət — Od dilinin sözləri</div>
       <div class="ref" id="ref"></div>
     </div>
@@ -165,6 +210,14 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
 </main>
 <footer>Od · Bütün kod sənin brauzerində işləyir — internet lazım deyil. ə, ş, ç, ğ, ı, ö, ü hərfləri olmadan yazsan da başa düşür.</footer>
 <div class="toast" id="toast"></div>
+<div id="cert" role="dialog" aria-label="Sertifikat"><div class="in">
+  <button style="float:right" id="certClose">✕ Bağla</button>
+  <h2 style="margin:0 0 6px">🏆 Təbriklər!</h2>
+  <p style="color:var(--muted);margin:0 0 12px">Od Dərsliyin bütün 10 dərsini bitirdin. Adını yaz — sertifikatın hazırdır.</p>
+  <input id="certName" placeholder="Adın və soyadın" maxlength="40"> <button id="certSave">⬇ Şəkil kimi yüklə</button>
+  <div style="color:var(--muted);font-size:12.5px;margin-top:8px">Yükləmə düyməsi işləmirsə: sertifikatın üzərində sağ klik → "Şəkli yadda saxla" (telefonda: barmağını basılı saxla).</div>
+  <canvas id="certCv" width="1600" height="1130"></canvas>
+</div></div>
 <div id="abc" role="dialog" aria-label="Od əlifbası"><div class="abc-in" id="abcIn"></div></div>
 
 <script>
@@ -172,6 +225,9 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
 </script>
 <script>
 /*EXAMPLES*/
+</script>
+<script>
+/*LESSONS*/
 </script>
 <script>
 (function(){
@@ -362,7 +418,7 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
   var PAIRS = {'(':')','[':']','{':'}','"':'"',"'":"'"};
 
   // ---- Yaddaş (layihə qaralaması) ----
-  function save(){ try { localStorage.setItem('od-kod', code.value); } catch(e){} }
+  function save(){ if (typeof lessonsMode !== 'undefined' && lessonsMode) { storeLessonCode(); return; } try { localStorage.setItem('od-kod', code.value); } catch(e){} }
   function load(){ try { return localStorage.getItem('od-kod'); } catch(e){ return null; } }
 
   // ---- Nümunələr ----
@@ -370,6 +426,7 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
   sel.innerHTML = '<option value="">📚 Nümunələr…</option>' + OD_EXAMPLES.map(function(x,i){ return '<option value="'+i+'">'+x.ad+'</option>'; }).join('');
   sel.addEventListener('change', function(){
     if (sel.value === '') return;
+    if (lessonsMode) exitLessons();
     code.value = OD_EXAMPLES[+sel.value].kod; errLine = null; highlight(); save(); sel.value = '';
     code.focus();
   });
@@ -530,7 +587,8 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
 
   // ---- İşə salma ----
   var t0, RUNS = 0;
-  async function runProgram(){
+  async function runProgram(srcOverride){
+    var src = typeof srcOverride === 'string' ? srcOverride : code.value;
     if (current) { current.stop(); if (pendingInput) pendingInput(); }
     cons.innerHTML = ''; errLine = null; highlight();
     stopGame(); resetTurtle(); stepBudget = 0;
@@ -546,7 +604,7 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
       turtle: turtleAPI,
       game: gameAPI
     };
-    var r = Od.run(code.value, io);
+    var r = Od.run(src, io);
     current = r;
     $('jsView').textContent = r.js ? '// Od kodundan yaradılmış JavaScript\n\n' + r.js : '// Kodda xəta olduğu üçün JavaScript yaradılmadı.';
     var res = await r.promise;
@@ -678,6 +736,137 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
   $('abc').addEventListener('click', function(e){ if (e.target.id === 'abc') closeABC(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeABC(); });
 
+  // ---- Od Dərslik ----
+  var LKEY = 'od-ders-v1';
+  var LS = { passed: {}, code: {}, cur: 0, fails: {} };
+  try { var saved = JSON.parse(localStorage.getItem(LKEY) || 'null'); if (saved) LS = Object.assign(LS, saved); } catch(e){}
+  function lsave(){ try { localStorage.setItem(LKEY, JSON.stringify(LS)); } catch(e){} }
+  var lessonsMode = false, freeCode = null, checking = false;
+  function passedCount(){ return OD_LESSONS.filter(function(l){ return LS.passed[l.id]; }).length; }
+
+  function setEditor(txt){ code.value = txt; errLine = null; highlight(); }
+  function enterLessons(i){
+    if (!lessonsMode) { freeCode = code.value; }
+    lessonsMode = true; document.body.classList.add('lessons'); $('lessonsBtn').classList.add('on'); $('lessonsBtn').textContent = '🧪 Sərbəst rejim';
+    openLesson(i == null ? LS.cur : i);
+  }
+  function exitLessons(){
+    storeLessonCode();
+    lessonsMode = false; document.body.classList.remove('lessons'); $('lessonsBtn').classList.remove('on'); $('lessonsBtn').textContent = '📘 Dərslər';
+    setEditor(load() || freeCode || OD_EXAMPLES[0].kod);
+    try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
+  }
+  function storeLessonCode(){ if (lessonsMode) { LS.code[OD_LESSONS[LS.cur].id] = code.value; lsave(); } }
+  function openLesson(i){
+    i = Math.max(0, Math.min(OD_LESSONS.length - 1, i));
+    if (lessonsMode && OD_LESSONS[LS.cur] && LS.cur !== i) storeLessonCode();
+    LS.cur = i; lsave();
+    var L = OD_LESSONS[i];
+    setEditor(LS.code[L.id] != null ? LS.code[L.id] : L.başlanğıc);
+    renderLesson(null);
+    try { history.replaceState(null, '', '#ders-' + (i + 1)); } catch(e){}
+  }
+  function renderLesson(result){
+    var L = OD_LESSONS[LS.cur], i = LS.cur, done = !!LS.passed[L.id];
+    var h = '<div class="lhead"><span class="lnum">Dərs ' + (i + 1) + ' / ' + OD_LESSONS.length + '</span><h2>' + esc(L.ad) + (done ? ' ✅' : '') + '</h2><span class="ltopic">' + esc(L.mövzu) + '</span></div>';
+    h += '<div class="dots">' + OD_LESSONS.map(function(x, k){ return '<button data-l="' + k + '" class="' + (LS.passed[x.id] ? 'done ' : '') + (k === i ? 'cur' : '') + '" title="' + esc(x.ad) + '">' + (k + 1) + '</button>'; }).join('') + '</div>';
+    h += L.izah;
+    h += '<div class="lex"><pre>' + esc(L.nümunə) + '</pre><button id="lexRun">▶ Nümunəni sına</button></div>';
+    h += '<div class="ltask"><b class="t">🎯 Tapşırıq</b><p>' + L.tapşırıq + '</p></div>';
+    h += '<div class="lbtns"><button class="check" id="lCheck">✔ Yoxla</button><button id="lHint">💡 İpucu</button>';
+    if ((LS.fails[L.id] || 0) >= 3 && !done) h += '<button id="lAns">👀 Cavabı göstər</button>';
+    h += '<button id="lReset">↺ Sıfırla</button>';
+    if (i < OD_LESSONS.length - 1) h += '<button class="next" id="lNext"' + (done ? '' : ' style="opacity:.55"') + '>Növbəti dərs →</button>';
+    else if (passedCount() === OD_LESSONS.length) h += '<button class="next" id="lCert">🏆 Sertifikat</button>';
+    h += '</div><div id="lhintBox"></div><div class="lres" id="lres"></div>';
+    $('lbody').innerHTML = h; $('lbody').scrollTop = 0;
+    document.querySelectorAll('.dots button').forEach(function(b){ b.onclick = function(){ openLesson(+b.dataset.l); }; });
+    $('lexRun').onclick = function(){ runProgram(L.nümunə); toast('Nümunə işə salındı — nəticə konsolda'); };
+    $('lCheck').onclick = checkCurrent;
+    $('lHint').onclick = function(){ $('lhintBox').innerHTML = '<div class="lhint">💡 ' + esc(L.ipucu) + '</div>'; };
+    $('lReset').onclick = function(){ setEditor(L.başlanğıc); storeLessonCode(); toast('Başlanğıc koduna qayıtdı'); };
+    if ($('lAns')) $('lAns').onclick = function(){ setEditor(L.cavab); storeLessonCode(); toast('Cavab redaktorda — oxu və başa düş, sonra Yoxla bas'); };
+    if ($('lNext')) $('lNext').onclick = function(){ if (!done) { toast('Əvvəlcə bu tapşırığı həll et 🙂'); return; } openLesson(i + 1); };
+    if ($('lCert')) $('lCert').onclick = openCert;
+    if (result) showResult(result);
+  }
+  function showResult(r){
+    var L = OD_LESSONS[LS.cur], h = '';
+    h += '<div class="big ' + (r.ok ? 'ok' : 'bad') + '">' + (r.ok ? '🎉 Əla! Tapşırıq həll olundu.' : '❌ Hələ düz deyil — yenidən cəhd et.') + '</div>';
+    if (r.mesaj) h += '<div class="tr bad">⚠️ ' + esc(r.mesaj) + '</div>';
+    r.results.forEach(function(t){
+      h += '<div class="tr ' + (t.ok ? 'ok' : 'bad') + '"><div>' + (t.ok ? '✅' : '❌') + '</div><div><b>Test ' + t.nömrə + '</b>' +
+        (t.girdi ? ' <small>· girdi: ' + esc(t.girdi.join(', ')) + '</small>' : '') +
+        (t.xəta ? '<pre>⚠️ ' + esc(t.xəta) + '</pre>' :
+          (t.ok ? '' : '<pre>Gözlənilən: ' + esc(t.gözlənilən) + '\nSənin nəticən: ' + esc(t.alınan || '(heç nə)') + '</pre>')) + '</div></div>';
+    });
+    $('lres').innerHTML = h;
+    $('lres').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function checkCurrent(){
+    if (checking) return; checking = true;
+    var L = OD_LESSONS[LS.cur]; storeLessonCode();
+    $('lres').innerHTML = '<div class="big">⏳ Yoxlanılır…</div>';
+    odCheckLesson(L, code.value).then(function(r){
+      checking = false;
+      if (r.ok) {
+        var first = !LS.passed[L.id];
+        LS.passed[L.id] = true; lsave();
+        renderLesson(r);
+        if (first) toast('+1 dərs ✅  (' + passedCount() + '/' + OD_LESSONS.length + ')');
+        if (first && passedCount() === OD_LESSONS.length) setTimeout(openCert, 700);
+      } else {
+        LS.fails[L.id] = (LS.fails[L.id] || 0) + 1; lsave();
+        renderLesson(r);
+        var bad = r.results.filter(function(t){ return t.xəta && /Sətir (\d+)/.test(t.xəta); })[0];
+        if (bad) { errLine = +/Sətir (\d+)/.exec(bad.xəta)[1]; highlight(); }
+      }
+    }, function(e){ checking = false; $('lres').innerHTML = '<div class="tr bad">' + esc(String(e)) + '</div>'; });
+  }
+  $('lessonsBtn').addEventListener('click', function(){ lessonsMode ? exitLessons() : enterLessons(); });
+
+  // Sertifikat
+  function drawCert(){
+    var c = $('certCv'), g = c.getContext('2d'), W2 = c.width, H2 = c.height;
+    var name = ($('certName').value || '').trim() || 'Adını yaz';
+    var grd = g.createLinearGradient(0, 0, W2, H2); grd.addColorStop(0, '#14100c'); grd.addColorStop(1, '#0b0d14');
+    g.fillStyle = grd; g.fillRect(0, 0, W2, H2);
+    g.strokeStyle = '#ff6a2b'; g.lineWidth = 6; g.strokeRect(40, 40, W2 - 80, H2 - 80);
+    g.strokeStyle = '#ffb02e66'; g.lineWidth = 2; g.strokeRect(62, 62, W2 - 124, H2 - 124);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = '120px serif'; g.fillText('🔥', W2/2, 200);
+    g.fillStyle = '#ffb02e'; g.font = '800 34px Manrope, sans-serif'; g.fillText('S E R T İ F İ K A T', W2/2, 315);
+    g.fillStyle = '#e6e8ee'; g.font = '600 30px Manrope, sans-serif'; g.fillText('Bu sertifikat təsdiq edir ki,', W2/2, 410);
+    g.fillStyle = '#ffffff'; g.font = 'italic 700 86px Lora, Georgia, serif'; g.fillText(name, W2/2, 525);
+    g.fillStyle = '#ff6a2b'; g.fillRect(W2/2 - 260, 590, 520, 4);
+    g.fillStyle = '#c9cfdc'; g.font = '600 30px Manrope, sans-serif';
+    g.fillText('Od dilində «Proqramlaşdırmanın əsasları» kursunun', W2/2, 670);
+    g.fillText('bütün 10 dərsini uğurla bitirdi.', W2/2, 715);
+    var d = new Date(); var aylar = ['yanvar','fevral','mart','aprel','may','iyun','iyul','avqust','sentyabr','oktyabr','noyabr','dekabr'];
+    g.fillStyle = '#8a91a3'; g.font = '600 26px Manrope, sans-serif';
+    g.fillText(d.getDate() + ' ' + aylar[d.getMonth()] + ' ' + d.getFullYear(), W2/2 - 360, 900);
+    g.fillText('Od — Azərbaycan dilində proqramlaşdırma', W2/2 + 260, 900);
+    g.fillStyle = '#5b6274'; g.font = '600 22px Manrope, sans-serif'; g.fillText('sano8063.github.io/od', W2/2, 1000);
+  }
+  function openCert(){ $('cert').classList.add('on'); drawCert(); setTimeout(function(){ $('certName').focus(); }, 50); }
+  $('certName').addEventListener('input', drawCert);
+  $('certClose').onclick = function(){ $('cert').classList.remove('on'); };
+  $('certSave').onclick = function(){
+    try {
+      var a = document.createElement('a'); a.download = 'od-sertifikat.png'; a.href = $('certCv').toDataURL('image/png');
+      document.body.appendChild(a); a.click(); a.remove();
+      toast('Sertifikat yükləndi 🏆');
+    } catch(e){ toast('Yükləmə alınmadı — şəklin üzərində sağ klik → "Şəkli yadda saxla"'); }
+  };
+
+  function routeHash(){
+    var h = location.hash.replace('#', '');
+    var m = /^ders-(\d+)$/.exec(h);
+    if (m) enterLessons(+m[1] - 1);
+    else if (h === 'dersler') enterLessons();
+  }
+  window.addEventListener('hashchange', routeHash);
+
   // ---- Başlanğıc ----
   code.value = load() || OD_EXAMPLES[0].kod;
   resetTurtle();
@@ -687,7 +876,9 @@ footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
   line('Yuxarıdakı "Nümunələr" menyusunda oyun və rəsm proqramları var.', 'sys');
   line('🔤 Dilin bütün hərflərini görmək üçün yuxarıdakı "Biz hərfləri qururuq" düyməsinə bas.', 'sys');
   var seen = null; try { seen = localStorage.getItem('od-abc-seen'); } catch(e){}
-  if (!seen) openABC();
+  if (/^#(dersler|ders-\d+)$/.test(location.hash)) { routeHash(); }
+  else if (!seen) openABC();
+  line('📘 Proqramlaşdırmanı sıfırdan öyrənmək üçün yuxarıdakı "Dərslər" düyməsinə bas.', 'sys');
 })();
 </script>
 </body>
