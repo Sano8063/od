@@ -6,7 +6,7 @@
 
 **Biz hərfləri qururuq — sözləri və cümlələri siz yazırsınız.**
 
-[▶ Onlayn sına](https://sano8063.github.io/od/) · [🔤 Əlifba](docs/ELIFBA.md) · [⚙️ Necə işləyir](docs/NECE-ISLEYIR.md) · [🤝 Töhfə ver](CONTRIBUTING.md)
+[▶ Onlayn sına](https://sano8063.github.io/od/) · [📘 Dərslər](https://sano8063.github.io/od/#dersler) · [🔤 Əlifba](docs/ELIFBA.md) · [⚙️ Necə işləyir](docs/NECE-ISLEYIR.md) · [🤝 Töhfə ver](CONTRIBUTING.md)
 
 ![Od redaktoru — oyun](docs/img/oyun.png)
 
@@ -44,6 +44,31 @@ nə qədər ki doğru:
     yoxsa:
         göstər("Daha kiçik ⬇")
 ```
+
+## 📘 Od Dərslik — 10 dərslik interaktiv kurs
+
+Od-un içində proqramlaşdırmanı **sıfırdan** öyrədən kurs var: [sano8063.github.io/od/#dersler](https://sano8063.github.io/od/#dersler)
+
+| # | Dərs | Mövzu |
+|---|---|---|
+| 1 | Salam, dünya! | `göstər` |
+| 2 | Dəyişənlər | `ad = dəyər` |
+| 3 | Riyaziyyat | `+ − * / % **` |
+| 4 | Sual ver, cavab al | `daxil_et()` |
+| 5 | Şərtlər | `əgər · yoxsa` |
+| 6 | Dövrlər | `təkrarla · hər` |
+| 7 | Toplayıcı | `nə qədər ki · +=` |
+| 8 | Siyahılar | `[ ] · .böl()` |
+| 9 | Funksiyalar | `funksiya · qaytar` |
+| 10 | Rəsm qələmi | `irəli · sağa` |
+
+- ✔ **Avtomatik yoxlama.** Şagirdin kodu müxtəlif girdilərlə işə salınır və nəticə yoxlanılır. Əllə yazılmış cavab ("86400") qəbul olunmur, kompüterə hesablatmaq lazımdır.
+- 💡 **İpucu**, 3 uğursuz cəhddən sonra isə **cavabı göstər** düyməsi çıxır.
+- 💾 **İrəliləyiş yadda qalır.** Hər dərsin kodu ayrıca saxlanılır.
+- 🏆 **Sertifikat.** 10 dərsi bitirən şagird adı yazılmış sertifikat yükləyir.
+- 🔗 Müəllim birbaşa dərsə link verə bilər: `#ders-5`.
+
+![Od Dərslik](docs/img/dersler.png)
 
 ## Niyə Od?
 
@@ -108,8 +133,9 @@ od/
 ├── src/
 │   ├── engine.js       ← Od-un "beyni": çevirici (transpiler) və icra mühiti
 │   ├── examples.js     ← nümunə proqramlar və oyunlar
+│   ├── lessons.js      ← 10 dərs və avtomatik yoxlayıcı
 │   └── template.html   ← redaktor, konsol, rəsm lövhəsi
-├── tests/od.test.js    ← testlər
+├── tests/             ← 48 test (dil + bütün dərslər)
 ├── scripts/build.js    ← yığma skripti
 └── docs/               ← sənədlər və şəkillər
 ```
@@ -123,7 +149,7 @@ od/
 - [x] Yazı stilləri və Od əlifbası
 - [ ] Siniflər: `sinif Oyunçu:`
 - [ ] `gətir`: başqa Od fayllarını və kitabxanaları yükləmək
-- [ ] 10 dərslik kurs və avtomatik yoxlanan tapşırıqlar
+- [x] 10 dərslik kurs, avtomatik yoxlama və sertifikat
 - [ ] Layihələri saxlamaq və paylaşmaq (hesablar)
 - [ ] Müəllim paneli
 - [ ] Səs və 3D

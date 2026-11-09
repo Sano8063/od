@@ -6,6 +6,7 @@ Od icma ilə böyüyür. Hər töhfə dəyərlidir: yeni funksiya, nümunə oyun
 
 - **Xəta tapdın?** [Issue aç](https://github.com/Sano8063/od/issues): Od kodunu, gözlədiyin nəticəni və aldığın nəticəni yaz.
 - **Yeni nümunə və ya oyun yazdın?** `src/examples.js` faylına əlavə et.
+- **Yeni dərs?** `src/lessons.js` faylına əlavə et: izah, nümunə, tapşırıq, testlər və cavab. `npm test` cavabın keçdiyini avtomatik yoxlayır.
 - **Yeni "hərf" (funksiya, açar söz) təklif edirsən?** Əvvəlcə issue aç və müzakirə edək. Dil sadə qalmalıdır.
 - **Sənədləri yaxşılaşdırmaq** da böyük köməkdir.
 
