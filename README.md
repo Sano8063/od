@@ -8,7 +8,7 @@
 
 [▶ Onlayn sına](https://sano8063.github.io/od/) · [📘 Dərslər](https://sano8063.github.io/od/#dersler) · [🔤 Əlifba](docs/ELIFBA.md) · [⚙️ Necə işləyir](docs/NECE-ISLEYIR.md) · [🤝 Töhfə ver](CONTRIBUTING.md)
 
-![Od redaktoru — oyun](docs/img/oyun.png)
+![Od redaktoru](docs/img/redaktor.png)
 
 </div>
 
@@ -44,6 +44,28 @@ nə qədər ki doğru:
     yoxsa:
         göstər("Daha kiçik ⬇")
 ```
+
+## 🏫 Od Sinif — müəllim və şagird üçün
+
+- **Rollar:** müəllim və şagird hesabları (Firebase Auth).
+- **Siniflər:** müəllim sinif yaradır, şagirdlər 6 simvollu kodla qoşulur.
+- **Ev tapşırıqları:** təsvir, başlanğıc kod, avtomatik testlər, son tarix.
+- **Avtomatik yoxlama:** şagirdin kodu müxtəlif girdilərlə işə salınır, nəticə müəllimin panelinə düşür.
+- **Müəllim paneli:** göndərişlər cədvəli, qiymət və şərh, göndərməyənlərin siyahısı.
+- **Bildirişlər:** yeni və şübhəli göndərişlər real vaxtda gəlir.
+
+### 🛡 Ciddi rejim
+
+Kodun süni intellektlə yazıldığını 100% dəqiq aşkar edən sistem yoxdur. Ona görə Od **siqnalları** göstərir, qərarı isə müəllim verir:
+
+- kod yapışdırma (neçə dəfə, neçə simvol);
+- səhifədən çıxma (neçə dəfə, nə qədər);
+- aktiv yazma vaxtı və düymə sayı;
+- **yazılışın təkrar oynadılması:** müəllim kodun addım-addım necə yazıldığını izləyir.
+
+Şagird ciddi rejimi redaktorun üstündə açıq görür. Gizli izləmə yoxdur.
+
+![Müəllim paneli](docs/img/muellim.png)
 
 ## 📘 Od Dərslik — 10 dərslik interaktiv kurs
 
@@ -85,7 +107,8 @@ Proqramlaşdırma öyrənən uşaq eyni anda iki çətinliklə üzləşir: **mə
 | 🎨 **Rəsm qələmi** | `irəli(100)`, `sağa(90)`, `rəng("qırmızı")` |
 | 🔤 **Yazı stilləri** | `"qalın"`, `"incə"`, `"maili"`, `"xətli"`, `"kod"`, `"klassik"` |
 | 🧩 **Obyektlər və xəta tutmaq** | `top = {x: 10, y: 20}`, `sına:` / `xəta olsa:` |
-| 🔒 **Tam yerli** | Kod istifadəçinin brauzerində işləyir, heç bir serverə göndərilmir |
+| 🎨 **Ayarlar** | 4 mövzu (qaranlıq, işıqlı, gecə mavisi, yüksək kontrast), 6 vurğu rəngi, şrift ölçüsü |
+| 🔒 **Yerli icra** | Kod istifadəçinin brauzerində işləyir; serverə yalnız sinif tapşırığı göndəriləndə gedir |
 
 <table>
 <tr>
@@ -134,8 +157,14 @@ od/
 │   ├── engine.js       ← Od-un "beyni": çevirici (transpiler) və icra mühiti
 │   ├── examples.js     ← nümunə proqramlar və oyunlar
 │   ├── lessons.js      ← 10 dərs və avtomatik yoxlayıcı
-│   └── template.html   ← redaktor, konsol, rəsm lövhəsi
-├── tests/             ← 48 test (dil + bütün dərslər)
+│   ├── app.js          ← redaktor, konsol, lövhə, dərslər, ayarlar
+│   ├── cloud.js        ← server qatı: Firebase və Demo sürücüləri
+│   ├── classroom.js    ← sinif, tapşırıqlar, ciddi rejim, müəllim paneli
+│   ├── firebase-config.js
+│   ├── styles.css
+│   └── template.html   ← səhifənin skeleti
+├── firestore.rules     ← verilənlər bazası təhlükəsizlik qaydaları
+├── tests/             ← 52 test (dil, dərslər, sinif sistemi)
 ├── scripts/build.js    ← yığma skripti
 └── docs/               ← sənədlər və şəkillər
 ```
@@ -150,8 +179,10 @@ od/
 - [ ] Siniflər: `sinif Oyunçu:`
 - [ ] `gətir`: başqa Od fayllarını və kitabxanaları yükləmək
 - [x] 10 dərslik kurs, avtomatik yoxlama və sertifikat
-- [ ] Layihələri saxlamaq və paylaşmaq (hesablar)
-- [ ] Müəllim paneli
+- [x] Müəllim/şagird hesabları, siniflər, ev tapşırıqları
+- [x] Müəllim paneli, bildirişlər, ciddi rejim
+- [x] Peşəkar redaktor dizaynı, mövzular və ayarlar
+- [ ] Layihələri saxlamaq və paylaşmaq
 - [ ] Səs və 3D
 
 ## Müəllif

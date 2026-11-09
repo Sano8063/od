@@ -1,0 +1,79 @@
+rules_version = '2';
+// Od Sinif — Firestore təhlükəsizlik qaydaları
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function signedIn() { return request.auth != null; }
+    function me() { return request.auth.uid; }
+    function profile() { return get(/databases/$(db)/documents/users/$(me())).data; }
+    function isTeacher() { return signedIn() && profile().rol == 'muellim'; }
+    function isMember(cid) { return exists(/databases/$(db)/documents/classes/$(cid)/members/$(me())); }
+    function classDoc(cid) { return get(/databases/$(db)/documents/classes/$(cid)).data; }
+
+    // İstifadəçi profili: yalnız özü oxuyur; rol sonradan dəyişdirilə bilməz
+    match /users/{uid} {
+      allow read: if signedIn() && uid == me();
+      allow create: if signedIn() && uid == me()
+        && request.resource.data.rol in ['muellim', 'sagird']
+        && request.resource.data.ad is string && request.resource.data.ad.size() > 0 && request.resource.data.ad.size() <= 60;
+      allow update: if signedIn() && uid == me()
+        && request.resource.data.rol == resource.data.rol
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['siniflər', 'ad']);
+    }
+
+    // Qoşulma kodları: yalnız dəqiq kodla oxumaq olar, siyahı yoxdur
+    match /codes/{kod} {
+      allow get: if signedIn();
+      allow create: if isTeacher() && request.resource.data.teacherId == me()
+        && getAfter(/databases/$(db)/documents/classes/$(request.resource.data.classId)).data.teacherId == me();
+    }
+
+    // Siniflər
+    match /classes/{cid} {
+      allow get: if signedIn() && (resource.data.teacherId == me() || isMember(cid));
+      allow list: if signedIn() && resource.data.teacherId == me();
+      allow create: if isTeacher() && request.resource.data.teacherId == me()
+        && request.resource.data.ad is string && request.resource.data.ad.size() <= 80;
+      allow update, delete: if signedIn() && resource.data.teacherId == me();
+
+      match /members/{uid} {
+        allow read: if signedIn() && (uid == me() || classDoc(cid).teacherId == me());
+        allow create: if signedIn() && uid == me() && profile().rol == 'sagird'
+          && get(/databases/$(db)/documents/codes/$(request.resource.data.kod)).data.classId == cid;
+        allow delete: if signedIn() && (uid == me() || classDoc(cid).teacherId == me());
+      }
+
+      // Tapşırıqlar: müəllim yazır, sinfin üzvləri oxuyur
+      match /assignments/{x} {
+        allow read: if signedIn() && (classDoc(cid).teacherId == me() || isMember(cid));
+        allow create: if signedIn() && classDoc(cid).teacherId == me()
+          && request.resource.data.teacherId == me() && request.resource.data.classId == cid;
+        allow update, delete: if signedIn() && classDoc(cid).teacherId == me();
+      }
+    }
+
+    // Göndərişlər: şagird öz göndərişini yazır, müəllim yalnız qiymət/şərh/oxundu dəyişir
+    match /submissions/{sid} {
+      function a() { return get(/databases/$(db)/documents/classes/$(request.resource.data.classId)/assignments/$(request.resource.data.aDoc)).data; }
+      function validStudentWrite() {
+        return signedIn()
+          && request.resource.data.studentId == me()
+          && request.resource.data.aid == request.resource.data.classId + '~' + request.resource.data.aDoc
+          && sid == request.resource.data.aid + '_' + me()
+          && request.resource.data.teacherId == a().teacherId
+          && request.resource.data.classId == a().classId
+          && isMember(request.resource.data.classId)
+          && request.resource.data.kod is string && request.resource.data.kod.size() < 50000
+          && request.resource.data.opsJson is string && request.resource.data.opsJson.size() < 700000
+          && request.resource.data.oxundu == false;
+      }
+      allow read: if signedIn() && (resource == null || resource.data.studentId == me() || resource.data.teacherId == me());
+      allow create: if validStudentWrite()
+        && request.resource.data['qiymət'] == null && request.resource.data['şərh'] == '';
+      allow update: if (validStudentWrite()
+          && request.resource.data['qiymət'] == resource.data['qiymət']
+          && request.resource.data['şərh'] == resource.data['şərh'])
+        || (signedIn() && resource.data.teacherId == me()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['oxundu', 'qiymət', 'şərh']));
+    }
+  }
+}

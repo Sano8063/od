@@ -1,224 +1,380 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="az" data-theme="qaranliq">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Od — Azərbaycan dilində proqramlaşdırma</title>
+<meta name="description" content="Od — Azərbaycan dilində proqramlaşdırma dili və tədris mühiti: dərslər, ev tapşırıqları, müəllim paneli.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Manrope:wght@300;400;600;800;900&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <style>
+/* ===== Od — interfeys üslubları ===== */
 :root{
-  --bg:#0f1115; --panel:#161922; --panel2:#1c202b; --line:#262b38; --text:#e6e8ee; --muted:#8a91a3;
-  --fire:#ff6a2b; --fire2:#ffb02e; --kw:#ff7b54; --fn:#ffc65c; --str:#9fe08a; --num:#7cc7ff; --cm:#5d6577; --err:#ff5470;
-  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace; --sans:'Manrope',system-ui,sans-serif;
+  --accent:#e8692c; --accent-fg:#ffffff;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --fs:14px; --radius:6px;
 }
+/* Mövzular */
+[data-theme="qaranliq"]{
+  --bg:#1b1d22; --bar:#16181c; --panel:#202228; --panel2:#272a31; --hover:#2d3038; --line:#30333b;
+  --text:#d6d9df; --muted:#8a8f9b; --faint:#5f6470;
+  --kw:#d38cf0; --fn:#6cb6ff; --str:#a5d6a7; --num:#f2b36b; --cm:#6a7180; --bool:#ff8a80; --sel:#3b4252;
+  --ok:#3fb950; --bad:#f85149; --warn:#d29922; --board:#101114;
+}
+[data-theme="isiqli"]{
+  --bg:#f6f7f9; --bar:#eceef2; --panel:#ffffff; --panel2:#f2f3f6; --hover:#e9ebf0; --line:#dcdfe5;
+  --text:#1f2328; --muted:#5d6672; --faint:#9aa1ac;
+  --kw:#8250df; --fn:#0b62d6; --str:#0a7d3e; --num:#b35900; --cm:#8c959f; --bool:#cf222e; --sel:#cfe3ff;
+  --ok:#1a7f37; --bad:#cf222e; --warn:#9a6700; --board:#ffffff;
+}
+[data-theme="gece"]{
+  --bg:#0e1522; --bar:#0b111c; --panel:#121b2b; --panel2:#172236; --hover:#1c2940; --line:#22314b;
+  --text:#d5deee; --muted:#7f8eaa; --faint:#55637d;
+  --kw:#c4a7ff; --fn:#7cc4ff; --str:#9ee6b5; --num:#ffc380; --cm:#5b6a85; --bool:#ff9a9a; --sel:#2a3b5c;
+  --ok:#3fb950; --bad:#ff6b6b; --warn:#e3b341; --board:#0a0f18;
+}
+[data-theme="kontrast"]{
+  --bg:#000000; --bar:#000000; --panel:#000000; --panel2:#0d0d0d; --hover:#1a1a1a; --line:#6b6b6b;
+  --text:#ffffff; --muted:#d0d0d0; --faint:#a0a0a0;
+  --kw:#ff9cff; --fn:#7fdbff; --str:#9bff9b; --num:#ffd479; --cm:#b0b0b0; --bool:#ff8080; --sel:#264f78;
+  --ok:#4ade80; --bad:#ff6b6b; --warn:#ffd479; --board:#000000;
+}
+
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:var(--sans)}
-body{display:flex;flex-direction:column;min-height:100vh}
-header{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#141720,#0f1115);flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:10px}
-.flame{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:radial-gradient(circle at 50% 70%,#ffcf4a,#ff6a2b 55%,#c2271b);box-shadow:0 0 18px #ff6a2b66;font-size:19px}
-.logo h1{margin:0;font-size:22px;font-weight:800;letter-spacing:.5px}
-.logo small{display:block;color:var(--muted);font-size:12px;font-weight:600;margin-top:-2px}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font:400 13.5px/1.5 var(--sans);display:grid;grid-template-rows:40px minmax(0,1fr) 24px;height:100vh;overflow:hidden}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Düymələr */
+.btn{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel2);font-size:12.5px;font-weight:500;white-space:nowrap}
+.btn:hover{background:var(--hover)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.ghost:hover{background:var(--hover)}
+.btn.danger{color:var(--bad)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.sm{height:24px;padding:0 8px;font-size:12px}
+.kbd{font-family:var(--mono);font-size:10.5px;opacity:.75;border:1px solid currentColor;border-radius:4px;padding:0 4px;line-height:15px}
+.field{display:flex;flex-direction:column;gap:5px;margin:0 0 12px}
+.field label{font-size:12px;color:var(--muted);font-weight:500}
+.inp{height:32px;padding:0 10px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel2);outline:none;width:100%}
+textarea.inp{height:auto;padding:8px 10px;resize:vertical;line-height:1.5}
+.inp:focus{border-color:var(--accent)}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+.row{display:flex;align-items:center;gap:8px}
 .spacer{flex:1}
-select,button{font-family:var(--sans);font-size:14px;font-weight:600;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:9px 14px;cursor:pointer}
-select:hover,button:hover{border-color:#3a4152}
-button.run{background:linear-gradient(135deg,var(--fire),#ff8a2b);border:none;color:#1a0b02;box-shadow:0 4px 16px #ff6a2b44}
-button.run:hover{filter:brightness(1.08)}
-button.stop{color:var(--err)}
-button:disabled{opacity:.45;cursor:default}
-.kbd{font-family:var(--mono);font-size:11px;opacity:.7;margin-left:6px}
-main{flex:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;padding:14px 18px;min-height:0}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
-.card-h{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted);font-weight:600}
-.dot{width:9px;height:9px;border-radius:50%;background:#2b3040}
-.tabs{display:flex;gap:4px}
-.tab{background:none;border:none;padding:6px 11px;border-radius:8px;color:var(--muted);font-size:13px}
-.tab.on{background:var(--panel2);color:var(--text)}
-/* redaktor */
-.editor{position:relative;flex:1;min-height:380px;display:flex;font-family:var(--mono);font-size:14.5px;line-height:1.6}
-.gutter{padding:12px 0;width:46px;text-align:right;color:#4a5164;user-select:none;overflow:hidden;background:#13161e;border-right:1px solid var(--line)}
-.gutter div{padding-right:10px;height:1.6em}
-.gutter div.err{color:#fff;background:var(--err)}
+
+/* Başlıq paneli */
+.titlebar{display:flex;align-items:center;gap:10px;padding:0 10px 0 8px;background:var(--bar);border-bottom:1px solid var(--line);min-width:0}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;letter-spacing:.2px}
+.mark{width:24px;height:24px;border-radius:6px;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font:700 12px var(--mono)}
+.crumb{color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.crumb b{color:var(--text);font-weight:500}
+.iconbtn{position:relative;width:30px;height:30px;display:grid;place-items:center;border-radius:var(--radius);border:none;background:transparent;color:var(--muted)}
+.iconbtn:hover{background:var(--hover);color:var(--text)}
+.badge{position:absolute;top:2px;right:1px;min-width:15px;height:15px;padding:0 4px;border-radius:8px;background:var(--bad);color:#fff;font-size:10px;font-weight:700;line-height:15px;text-align:center;display:none}
+.badge.on{display:block}
+.userchip{display:flex;align-items:center;gap:7px;height:28px;padding:0 10px 0 4px;border-radius:14px;border:1px solid var(--line);background:var(--panel2);font-size:12.5px}
+.avatar{width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-size:10.5px;font-weight:700}
+
+/* İş sahəsi */
+.workspace{display:grid;grid-template-columns:48px auto minmax(0,1fr);min-height:0}
+.activity{background:var(--bar);border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:6px 0;gap:2px}
+.act{width:48px;height:44px;display:grid;place-items:center;border:none;background:transparent;color:var(--faint);position:relative}
+.act:hover{color:var(--text)}
+.act.on{color:var(--text)}
+.act.on::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;background:var(--accent);border-radius:2px}
+.act svg.i{width:22px;height:22px}
+.act .badge{top:6px;right:8px}
+.side{width:var(--side-w,300px);background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.side.closed{display:none}
+.side-h{height:34px;display:flex;align-items:center;gap:6px;padding:0 8px 0 14px;font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);flex:none}
+.side-b{flex:1;overflow:auto;min-height:0}
+.pane{display:none}
+.pane.on{display:block}
+.sec{padding:12px 14px;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:none}
+.sec h4{margin:0 0 8px;font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.list{display:flex;flex-direction:column}
+.item{display:flex;align-items:center;gap:8px;padding:6px 14px;border:none;background:transparent;text-align:left;width:100%;font-size:13px;color:var(--text);border-radius:0}
+.item:hover{background:var(--hover)}
+.item.on{background:var(--sel)}
+.item .meta{margin-left:auto;font-size:11.5px;color:var(--muted)}
+.item svg.i{width:16px;height:16px;color:var(--muted)}
+.dotk{width:8px;height:8px;border-radius:50%;background:var(--faint);flex:none}
+.dotk.ok{background:var(--ok)} .dotk.bad{background:var(--bad)} .dotk.warn{background:var(--warn)}
+
+/* Mərkəz */
+.center{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);min-height:0;min-width:0}
+.center.dash .ed,.center.dash .out{display:none}
+.center.dash .dashv{display:flex}
+.dashv{display:none;grid-column:1/-1;flex-direction:column;min-height:0;overflow:auto;background:var(--bg)}
+.ed{display:flex;flex-direction:column;min-height:0;min-width:0;border-right:1px solid var(--line);background:var(--panel)}
+.tabsbar{height:34px;display:flex;align-items:stretch;background:var(--bar);border-bottom:1px solid var(--line);flex:none;min-width:0}
+.ftab{display:flex;align-items:center;gap:7px;padding:0 14px;font-size:12.5px;color:var(--text);background:var(--panel);border-right:1px solid var(--line);border-top:1px solid var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
+.ftab svg.i{width:15px;height:15px;color:var(--accent)}
+.tabsbar .tools{margin-left:auto;display:flex;align-items:center;gap:4px;padding:0 6px}
+.banner{display:none;align-items:center;gap:8px;padding:7px 12px;font-size:12.5px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--warn) 14%,var(--panel));color:var(--text)}
+.banner.on{display:flex}
+.banner svg.i{color:var(--warn)}
+.editor{position:relative;flex:1;min-height:0;display:flex;font-family:var(--mono);font-size:var(--fs);line-height:1.6}
+.gutter{padding:10px 0;width:48px;text-align:right;color:var(--faint);user-select:none;overflow:hidden;background:var(--panel);flex:none}
+.gutter div{padding-right:12px;height:1.6em}
+.gutter div.err{color:#fff;background:var(--bad)}
+.nolines .gutter{display:none}
 .codewrap{position:relative;flex:1;overflow:hidden}
-#hl,#code{position:absolute;inset:0;margin:0;padding:12px 14px;font:inherit;white-space:pre;overflow:auto;tab-size:4;letter-spacing:0}
+#hl,#code{position:absolute;inset:0;margin:0;padding:10px 14px;font:inherit;white-space:pre;overflow:auto;tab-size:4;letter-spacing:0}
 #hl{pointer-events:none;color:var(--text)}
-#code{background:transparent;color:transparent;caret-color:var(--fire2);border:none;outline:none;resize:none;z-index:1}
-#code::selection{background:#ff6a2b44;color:transparent}
-#hl .kw{color:var(--kw);font-weight:600}
-#hl .fn{color:var(--fn)}
-#hl .str{color:var(--str)}
-#hl .strbad{color:var(--str);text-decoration:underline wavy var(--err);text-underline-offset:4px}
-#hl .num{color:var(--num)}
-#hl .cm{color:var(--cm);font-style:italic}
-#hl .bool{color:#d59cff}
-#hl .errline{background:#ff547022;display:inline-block;width:100%}
-/* konsol */
-.right{display:flex;flex-direction:column;gap:14px;min-height:0}
-.outbody{flex:1;position:relative;min-height:300px}
-#console{position:absolute;inset:0;overflow:auto;padding:12px 14px;font-family:var(--mono);font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+#code{background:transparent;color:transparent;caret-color:var(--text);border:none;outline:none;resize:none;z-index:1}
+#code::selection{background:var(--sel);color:transparent}
+#code[readonly]{caret-color:transparent}
+pre .kw{color:var(--kw)} pre .fn{color:var(--fn)} pre .str{color:var(--str)} pre .num{color:var(--num)}
+pre .cm{color:var(--cm);font-style:italic} pre .bool{color:var(--bool)}
+#hl .strbad{color:var(--str);text-decoration:underline wavy var(--bad);text-underline-offset:4px}
+#hl .errline{background:color-mix(in srgb,var(--bad) 16%,transparent);display:inline-block;width:100%}
+
+.out{display:flex;flex-direction:column;min-height:0;min-width:0;background:var(--panel)}
+.otabs{height:34px;display:flex;align-items:stretch;gap:0;background:var(--bar);border-bottom:1px solid var(--line);flex:none}
+.otab{border:none;background:transparent;padding:0 14px;font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:600;border-bottom:1px solid transparent}
+.otab:hover{color:var(--text)}
+.otab.on{color:var(--text);border-bottom-color:var(--accent)}
+.obody{flex:1;position:relative;min-height:0}
+#console{position:absolute;inset:0;overflow:auto;padding:10px 14px;font-family:var(--mono);font-size:calc(var(--fs) - 0.5px);line-height:1.55;white-space:pre-wrap;word-break:break-word}
 #console .sys{color:var(--muted)}
-#console .ok{color:#7be495}
-#console .err{color:#fff;background:#ff547018;border-left:3px solid var(--err);padding:8px 10px;border-radius:6px;margin:6px 0;white-space:normal}
-#console .err b{color:var(--err)}
+#console .err{border-left:2px solid var(--bad);padding:6px 10px;margin:6px 0;background:color-mix(in srgb,var(--bad) 10%,transparent);white-space:normal;font-family:var(--sans);font-size:13px}
+#console .err b{color:var(--bad);font-weight:600}
 #console .inrow{display:flex;gap:8px;align-items:center;margin:4px 0}
-#console .inrow span{color:var(--fire2)}
-#console input{flex:1;background:var(--panel2);border:1px solid var(--fire);border-radius:8px;color:var(--text);font:inherit;padding:6px 9px;outline:none}
-#console .echo{color:var(--fire2)}
-#canvasBox{position:absolute;inset:0;display:none;place-items:center;background:#0b0d11}
+#console .inrow span{color:var(--accent)}
+#console input{flex:1;background:var(--panel2);border:1px solid var(--accent);border-radius:var(--radius);font:inherit;padding:4px 8px;outline:none}
+#console .echo{color:var(--accent)}
+#canvasBox{position:absolute;inset:0;display:none;place-items:center;background:var(--board);outline:none}
 #canvasBox canvas{display:block}
-#canvasBox{outline:none}
-#canvasBox:focus-visible{box-shadow:inset 0 0 0 2px var(--fire)}
+#jsView{position:absolute;inset:0;display:none;overflow:auto;margin:0;padding:10px 14px;font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:pre}
 #pad{position:absolute;left:0;right:0;bottom:10px;display:none;justify-content:space-between;padding:0 12px;pointer-events:none}
 #pad .grp{display:flex;gap:8px;pointer-events:auto}
-#pad button{width:56px;height:56px;border-radius:14px;font-size:22px;background:#ffffff18;border:1px solid #ffffff30;touch-action:none;user-select:none}
-#pad button.wide{width:96px;font-size:14px}
-#jsView{position:absolute;inset:0;display:none;overflow:auto;margin:0;padding:12px 14px;font-family:var(--mono);font-size:12.5px;color:#aab2c5;white-space:pre}
-/* lüğət */
-.ref{max-height:260px;overflow:auto;padding:4px 12px 12px}
-.ref table{width:100%;border-collapse:collapse;font-size:13px}
-.ref td{padding:6px 6px;border-bottom:1px solid var(--line);vertical-align:top}
-.ref td:first-child{font-family:var(--mono);color:var(--kw);white-space:nowrap;font-weight:600}
-.ref td:last-child{color:var(--muted)}
-.ref h4{margin:12px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--fire2)}
-/* əlifba */
-.motto{font-size:13px;color:var(--fire2);font-weight:600;padding:6px 12px;border:1px dashed #ff6a2b66;border-radius:10px;cursor:pointer;background:#ff6a2b10}
-.motto:hover{background:#ff6a2b22}
-.motto .short{display:none}
-@media (max-width:1700px){.motto .long{display:none}.motto .short{display:inline}}
-#abc{position:fixed;inset:0;background:#07080bcc;backdrop-filter:blur(6px);display:none;z-index:50;overflow:auto;padding:28px 18px}
-#abc.on{display:block}
-.abc-in{max-width:1100px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px 28px}
-.abc-in h2{margin:0 0 6px;font-size:28px;font-weight:800}
-.abc-in .phil{color:var(--muted);font-size:15px;line-height:1.6;margin:0 0 6px;max-width:820px}
-.abc-in .phil b{color:var(--fire2)}
-.ladder{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 8px;font-size:13px;font-weight:600}
-.ladder span{padding:7px 12px;border-radius:999px;background:var(--panel2);border:1px solid var(--line)}
-.ladder span.us{border-color:var(--fire);color:var(--fire2)}
-.ladder i{color:var(--muted);font-style:normal;align-self:center}
-.abc-sec{margin-top:22px}
-.abc-sec h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:1.2px;color:var(--fire2);display:flex;gap:8px;align-items:center}
-.abc-sec h3 em{font-style:normal;color:var(--muted);font-weight:600;letter-spacing:0;text-transform:none;font-size:12px}
-.chips{display:flex;flex-wrap:wrap;gap:7px}
-.chip{font-family:var(--mono);font-size:13.5px;padding:7px 11px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);color:var(--text);cursor:pointer;position:relative}
-.chip:hover{border-color:var(--fire)}
-.chip.kw{color:var(--kw)} .chip.fn{color:var(--fn)} .chip.op{color:var(--num)} .chip.st{color:#d59cff}
-.chip small{display:block;font-family:var(--sans);font-size:11px;color:var(--muted);margin-top:2px;font-weight:600}
-.abc-close{float:right}
-.total{display:inline-block;margin-top:4px;font-size:13px;color:var(--muted)}
-.total b{color:var(--text)}
-/* dərslər */
-#lessonsBtn.on{background:linear-gradient(135deg,#2b6cff,#5b8cff);border:none;color:#fff}
-.right .card.ref{}
-body.lessons .card.ref{display:none}
-body.lessons #lessonCard{display:flex}
-#lessonCard{display:none;flex:1.25;min-height:0}
-body.lessons .right>.card.out{flex:0.9}
-.lbody{overflow:auto;padding:16px 18px 18px;flex:1}
-.lhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.lnum{font-size:12px;font-weight:800;color:#8fb0ff;background:#2b6cff22;border:1px solid #2b6cff55;padding:4px 9px;border-radius:999px}
-.lhead h2{margin:0;font-size:21px;font-weight:800}
+#pad button{width:54px;height:54px;border-radius:12px;font-size:20px;background:#ffffff1f;border:1px solid #ffffff38;color:#fff;touch-action:none;user-select:none}
+#pad button.wide{width:90px;font-size:13px}
+
+/* Status paneli */
+.statusbar{display:flex;align-items:center;gap:14px;padding:0 10px;background:var(--accent);color:var(--accent-fg);font-size:11.5px;white-space:nowrap;overflow:hidden}
+.statusbar span{display:flex;align-items:center;gap:5px}
+.statusbar svg.i{width:13px;height:13px}
+
+/* Dərslər */
+.lbody{padding:14px 16px 18px}
+.lhead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.lnum{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.lhead h2{margin:2px 0 0;font-size:18px;font-weight:650;width:100%}
 .ltopic{font-family:var(--mono);font-size:12px;color:var(--muted)}
-.dots{display:flex;gap:5px;margin:12px 0 4px;flex-wrap:wrap}
-.dots button{width:28px;height:28px;padding:0;border-radius:8px;font-size:12px;font-weight:800;background:var(--panel2);color:var(--muted)}
-.dots button.done{background:#16a34a33;border-color:#22c55e88;color:#7be495}
-.dots button.cur{outline:2px solid #5b8cff;color:var(--text)}
-.lbody p{color:#c9cfdc;line-height:1.65;margin:10px 0;font-size:14.5px}
-.lbody code{font-family:var(--mono);font-size:13px;background:#0f1218;border:1px solid var(--line);padding:1px 6px;border-radius:6px;color:var(--fire2)}
+.dots{display:flex;gap:4px;margin:12px 0 6px;flex-wrap:wrap}
+.dots button{width:26px;height:26px;padding:0;border-radius:5px;font-size:11.5px;font-weight:600;background:var(--panel2);color:var(--muted);border:1px solid var(--line)}
+.dots button.done{background:color-mix(in srgb,var(--ok) 18%,var(--panel2));border-color:color-mix(in srgb,var(--ok) 55%,transparent);color:var(--text)}
+.dots button.cur{border-color:var(--accent);color:var(--text)}
+.prog{height:4px;border-radius:2px;background:var(--panel2);overflow:hidden;margin:6px 0 4px}
+.prog i{display:block;height:100%;background:var(--ok)}
+.lbody p,.doc p{line-height:1.65;margin:10px 0;font-size:13.5px}
+.lbody code,.doc code{font-family:var(--mono);font-size:12.5px;background:var(--panel2);border:1px solid var(--line);padding:0 5px;border-radius:4px}
 .lex{position:relative;margin:12px 0}
-.lex pre{margin:0;background:#0f1218;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:13px;line-height:1.6;overflow:auto;color:var(--text)}
-.lex button{position:absolute;top:8px;right:8px;font-size:12px;padding:5px 9px}
-.ltask{margin-top:14px;padding:12px 14px;border-radius:12px;background:#ff6a2b12;border:1px solid #ff6a2b55}
-.ltask b.t{display:block;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--fire2);margin-bottom:6px}
-.ltask p{margin:0}
-.lbtns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.lbtns .check{background:linear-gradient(135deg,#16a34a,#22c55e);border:none;color:#04210f}
-.lbtns .next{background:linear-gradient(135deg,#2b6cff,#5b8cff);border:none;color:#fff}
-.lres{margin-top:12px;font-size:13.5px}
-.lres .tr{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:9px;background:var(--panel2);margin:6px 0;border:1px solid var(--line)}
-.lres .tr.ok{border-color:#22c55e66}
-.lres .tr.bad{border-color:#ff547066}
-.lres .tr pre{margin:2px 0 0;font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;color:#c9cfdc}
-.lres .tr small{color:var(--muted)}
-.lres .big{font-size:16px;font-weight:800;margin:8px 0}
-.lres .big.ok{color:#7be495}.lres .big.bad{color:#ff8fa3}
-.lhint{margin-top:10px;padding:10px 12px;border-radius:10px;background:#ffd2401a;border:1px dashed #ffd24066;font-size:13.5px;color:#ffe08a;white-space:pre-wrap;font-family:var(--mono)}
-#cert{position:fixed;inset:0;background:#07080bcc;backdrop-filter:blur(6px);display:none;z-index:60;overflow:auto;padding:28px 18px}
-#cert.on{display:block}
-#cert .in{max-width:900px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
-#cert canvas{width:100%;height:auto;border-radius:12px;display:block;margin-top:12px}
-#cert input{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font:600 15px var(--sans);min-width:240px}
-footer{padding:8px 18px 14px;color:#5b6274;font-size:12px}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#22c55e;color:#03210f;font-weight:700;padding:9px 16px;border-radius:10px;opacity:0;transition:.25s;pointer-events:none}
-.toast.on{opacity:1}
-@media (max-width:900px){.motto{order:5;width:100%;text-align:center}main{grid-template-columns:1fr;min-height:auto;flex:none}.editor{min-height:320px}.right>.card.out{flex:none !important;height:420px}#lessonCard{flex:none !important}.lbody{overflow:visible}}
+.lex pre,pre.codeblk{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;font-family:var(--mono);font-size:12.5px;line-height:1.6;overflow:auto;white-space:pre}
+.lex .btn{position:absolute;top:6px;right:6px}
+.task{margin-top:12px;padding:10px 12px;border-radius:var(--radius);border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--panel2)}
+.task b.t{display:block;font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600}
+.task p{margin:0}
+.lbtns{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.lres{margin-top:12px;font-size:13px}
+.tr{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:var(--radius);background:var(--panel2);margin:6px 0;border:1px solid var(--line)}
+.tr.ok{border-left:3px solid var(--ok)} .tr.bad{border-left:3px solid var(--bad)} .tr.warn{border-left:3px solid var(--warn)}
+.tr pre{margin:3px 0 0;font-family:var(--mono);font-size:12px;white-space:pre-wrap}
+.tr small{color:var(--muted)}
+.big{font-size:14px;font-weight:600;margin:8px 0}
+.big.ok{color:var(--ok)} .big.bad{color:var(--bad)}
+.hint{margin-top:10px;padding:8px 10px;border-radius:var(--radius);border:1px dashed var(--warn);font-size:12.5px;white-space:pre-wrap;font-family:var(--mono)}
+
+/* Əlifba */
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-family:var(--mono);font-size:12px;padding:3px 7px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.chip.kw{color:var(--kw)} .chip.fn{color:var(--fn)} .chip.op{color:var(--num)} .chip.st{color:var(--str)}
+.phil{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0}
+
+/* Ayarlar */
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+.sw.on{border-color:var(--text);box-shadow:0 0 0 2px var(--panel) inset}
+.themes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.th{border:1px solid var(--line);border-radius:var(--radius);padding:8px;text-align:left;background:var(--panel2);color:var(--text);font-size:12px}
+.th.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.th .pv{display:flex;gap:3px;margin-bottom:6px}
+.th .pv i{flex:1;height:18px;border-radius:3px}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;font-size:13px}
+.switch input{width:34px;height:18px;appearance:none;border-radius:9px;background:var(--line);position:relative;cursor:pointer;flex:none}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.15s}
+.switch input:checked{background:var(--accent)}
+.switch input:checked::after{left:18px}
+input[type=range]{accent-color:var(--accent);width:100%}
+
+/* Sinif / müəllim paneli */
+.dash-h{display:flex;align-items:center;gap:10px;padding:16px 24px;border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap}
+.dash-h h2{margin:0;font-size:17px;font-weight:650}
+.dash-b{padding:18px 24px 40px;max-width:1200px;width:100%}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px}
+.card h3{margin:0 0 4px;font-size:14px;font-weight:600}
+.stat{font-size:22px;font-weight:650}
+table.t{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+table.t th{text-align:left;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:600;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--panel2)}
+table.t td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t tr:last-child td{border-bottom:none}
+table.t tr.click{cursor:pointer}
+table.t tr.click:hover td{background:var(--hover)}
+.pill{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:10px;font-size:11.5px;font-weight:600;border:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 50%,transparent)}
+.pill.bad{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 50%,transparent)}
+.pill.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 50%,transparent)}
+.codebig{background:var(--panel);border:1px solid var(--line);border-radius:8px;font-family:var(--mono);font-size:13px;line-height:1.6;padding:12px 14px;white-space:pre;overflow:auto;max-height:420px;margin:0}
+.grid2{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}
+.notice{padding:9px 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel2);font-size:12.5px;color:var(--muted);margin:10px 0}
+.notice.warn{border-color:color-mix(in srgb,var(--warn) 60%,transparent);color:var(--text)}
+.testrow{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:start}
+.kod{font-family:var(--mono);font-size:18px;letter-spacing:3px;font-weight:700;color:var(--accent)}
+.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:8px}
+
+/* Modallar və bildiriş */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:60;overflow:auto;padding:40px 16px}
+.modal.on{display:block}
+.modal .box{max-width:480px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.modal .box.wide{max-width:880px}
+.modal h2{margin:0 0 4px;font-size:17px;font-weight:650}
+.seg{display:flex;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:14px}
+.seg button{flex:1;height:32px;border:none;background:var(--panel2);font-size:12.5px;font-weight:500}
+.seg button.on{background:var(--accent);color:var(--accent-fg)}
+#certCv{width:100%;height:auto;border-radius:8px;display:block;margin-top:12px}
+.toast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:var(--bg);font-weight:500;font-size:13px;padding:8px 14px;border-radius:var(--radius);opacity:0;transition:.2s;pointer-events:none;z-index:80}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.pop{position:fixed;top:44px;right:10px;width:340px;max-height:70vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:70;display:none}
+.pop.on{display:block}
+.pop .ph{padding:10px 14px;font-weight:600;border-bottom:1px solid var(--line);display:flex;align-items:center}
+.nitem{padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer;font-size:12.5px}
+.nitem:hover{background:var(--hover)}
+.nitem.unread{border-left:3px solid var(--accent)}
+.replay{display:flex;align-items:center;gap:8px;margin:8px 0}
+.replay .mono{white-space:nowrap;min-width:110px;text-align:right}
+
+/* Responsiv */
+@media (max-width:1100px){
+  .center{grid-template-columns:1fr;grid-template-rows:minmax(0,1.2fr) minmax(0,1fr)}
+  .ed{border-right:none;border-bottom:1px solid var(--line)}
+  .grid2{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  body{height:auto;min-height:100vh;overflow:auto;grid-template-rows:auto auto auto}
+  .titlebar{flex-wrap:wrap;padding:6px 8px;height:auto;gap:6px}
+  .crumb{display:none}
+  .workspace{grid-template-columns:1fr;padding-bottom:56px}
+  .activity{position:fixed;bottom:0;left:0;right:0;height:56px;flex-direction:row;justify-content:space-around;border-right:none;border-top:1px solid var(--line);z-index:50;padding:0}
+  .act.on::before{left:12px;right:12px;top:0;bottom:auto;width:auto;height:2px}
+  .side{width:100%;border-right:none;border-bottom:1px solid var(--line);max-height:none}
+  .side-b{overflow:visible}
+  .center{grid-template-rows:auto auto}
+  .editor{height:60vh;min-height:300px}
+  .out{height:380px}
+  .statusbar{display:none}
+  .dash-h,.dash-b{padding-left:14px;padding-right:14px}
+}
+
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">
-    <div class="flame">🔥</div>
-    <div><h1>Od</h1><small>Azərbaycan dilində proqramlaşdırma 🇦🇿</small></div>
-  </div>
-  <div class="motto" id="mottoBtn" title="Biz hərfləri qururuq — sözləri və cümlələri siz yazırsınız">🔤 <span class="long">Biz hərfləri qururuq — sözləri və cümlələri siz yazırsınız</span><span class="short">Od əlifbası</span></div>
+<header class="titlebar">
+  <div class="brand"><div class="mark">od</div><span>Od</span></div>
+  <div class="crumb" id="crumb"></div>
   <div class="spacer"></div>
-  <select id="examples" aria-label="Nümunələr"></select>
-  <button id="lessonsBtn" title="10 dərslik interaktiv kurs">📘 Dərslər</button>
-  <button id="copyBtn" title="Kodu kopyala">📋 Kopyala</button>
-  <button id="stopBtn" class="stop" disabled>■ Dayandır</button>
-  <button id="runBtn" class="run">▶ İşə sal <span class="kbd">Ctrl+Enter</span></button>
+  <button class="btn" id="copyBtn" data-icon="copy" title="Kodu kopyala">Kopyala</button>
+  <button class="btn" id="stopBtn" data-icon="stop" disabled title="Proqramı dayandır">Dayandır</button>
+  <button class="btn primary" id="runBtn" data-icon="play" title="İşə sal (Ctrl+Enter)">İşə sal <span class="kbd">Ctrl+↵</span></button>
+  <button class="iconbtn" id="bellBtn" data-icon="bell" title="Bildirişlər"><span class="badge" id="bellBadge"></span></button>
+  <button class="userchip" id="userBtn" title="Hesab"><span class="avatar" id="userAv">?</span><span id="userName">Daxil ol</span></button>
 </header>
 
-<main>
-  <section class="card">
-    <div class="card-h"><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp; proqram.od</div>
-    <div class="editor">
-      <div class="gutter" id="gutter"></div>
-      <div class="codewrap">
-        <pre id="hl" aria-hidden="true"></pre>
-        <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Kod redaktoru"></textarea>
-      </div>
-    </div>
-  </section>
+<div class="workspace">
+  <nav class="activity" aria-label="Bölmələr">
+    <button class="act on" data-pane="kod" data-icon="files" title="Kod və nümunələr"></button>
+    <button class="act" data-pane="dersler" data-icon="book" title="Dərslər"></button>
+    <button class="act" data-pane="sinif" data-icon="users" title="Sinif və tapşırıqlar"><span class="badge" id="actBadge"></span></button>
+    <button class="act" data-pane="elifba" data-icon="type" title="Od əlifbası"></button>
+    <div class="spacer"></div>
+    <button class="act" data-pane="ayarlar" data-icon="gear" title="Ayarlar"></button>
+  </nav>
 
-  <section class="right">
-    <div class="card" id="lessonCard"><div class="card-h">📘 Od Dərslik — proqramlaşdırmanın əsasları</div><div class="lbody" id="lbody"></div></div>
-    <div class="card out" style="flex:1">
-      <div class="card-h">
-        <div class="tabs">
-          <button class="tab on" data-tab="console">💬 Konsol</button>
-          <button class="tab" data-tab="canvas">🎨 Rəsm</button>
-          <button class="tab" data-tab="js">⚙️ JavaScript</button>
+  <aside class="side" id="side">
+    <div class="side-h"><span id="sideTitle">Kod</span></div>
+    <div class="side-b">
+      <div class="pane on" id="pane-kod"></div>
+      <div class="pane" id="pane-dersler"><div class="lbody" id="lbody"></div></div>
+      <div class="pane" id="pane-sinif"></div>
+      <div class="pane" id="pane-elifba"></div>
+      <div class="pane" id="pane-ayarlar"></div>
+    </div>
+  </aside>
+
+  <main class="center" id="center">
+    <section class="ed">
+      <div class="tabsbar"><div class="ftab" id="ftab"></div><div class="tools" id="edTools"></div></div>
+      <div class="banner" id="strictBanner"><span data-icon="shield"></span><span><b>Ciddi rejim.</b> Kod yapışdırmaq, səhifədən çıxmaq və yazılış vaxtı müəllimə göstərilir.</span></div>
+      <div class="editor" id="editorBox">
+        <div class="gutter" id="gutter"></div>
+        <div class="codewrap">
+          <pre id="hl" aria-hidden="true"></pre>
+          <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Kod redaktoru"></textarea>
         </div>
-        <div class="spacer"></div>
-        <span id="status">Hazır</span>
       </div>
-      <div class="outbody">
+    </section>
+    <section class="out">
+      <div class="otabs">
+        <button class="otab on" data-tab="console">Konsol</button>
+        <button class="otab" data-tab="canvas">Lövhə</button>
+        <button class="otab" data-tab="js">JavaScript</button>
+      </div>
+      <div class="obody">
         <div id="console"></div>
         <div id="canvasBox" tabindex="0"><canvas id="cv" width="1200" height="1200"></canvas>
           <div id="pad"><div class="grp"><button data-k="sol">◀</button><button data-k="yuxari">▲</button><button data-k="asagi">▼</button><button data-k="sag">▶</button></div><div class="grp"><button class="wide" data-k="bosluq">Atəş</button></div></div>
         </div>
         <pre id="jsView"></pre>
       </div>
-    </div>
-    <div class="card ref">
-      <div class="card-h">📖 Lüğət — Od dilinin sözləri</div>
-      <div class="ref" id="ref"></div>
-    </div>
-  </section>
-</main>
-<footer>Od · Bütün kod sənin brauzerində işləyir — internet lazım deyil. ə, ş, ç, ğ, ı, ö, ü hərfləri olmadan yazsan da başa düşür.</footer>
-<div class="toast" id="toast"></div>
-<div id="cert" role="dialog" aria-label="Sertifikat"><div class="in">
-  <button style="float:right" id="certClose">✕ Bağla</button>
-  <h2 style="margin:0 0 6px">🏆 Təbriklər!</h2>
-  <p style="color:var(--muted);margin:0 0 12px">Od Dərsliyin bütün 10 dərsini bitirdin. Adını yaz — sertifikatın hazırdır.</p>
-  <input id="certName" placeholder="Adın və soyadın" maxlength="40"> <button id="certSave">⬇ Şəkil kimi yüklə</button>
-  <div style="color:var(--muted);font-size:12.5px;margin-top:8px">Yükləmə düyməsi işləmirsə: sertifikatın üzərində sağ klik → "Şəkli yadda saxla" (telefonda: barmağını basılı saxla).</div>
+    </section>
+    <section class="dashv" id="dashv"></section>
+  </main>
+</div>
+
+<footer class="statusbar">
+  <span id="sbMode"></span>
+  <span id="sbStatus">Hazır</span>
+  <div class="spacer"></div>
+  <span id="sbPos">Sətir 1, Sütun 1</span>
+  <span id="sbCloud"></span>
+  <span>Od 0.5</span>
+</footer>
+
+<div class="pop" id="bellPop"></div>
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+<div class="modal" id="cert"><div class="box wide">
+  <div class="row"><h2>Sertifikat</h2><div class="spacer"></div><button class="btn ghost" id="certClose">Bağla</button></div>
+  <p class="muted" style="margin:4px 0 12px">Od Dərsliyin bütün 10 dərsini bitirdin. Adını yaz — sertifikatın hazırdır.</p>
+  <div class="row"><input class="inp" id="certName" placeholder="Adın və soyadın" maxlength="40" style="max-width:320px"><button class="btn primary" id="certSave">Şəkil kimi yüklə</button></div>
+  <div class="muted" style="font-size:12px;margin-top:8px">Yükləmə işləmirsə: sertifikatın üzərində sağ klik → "Şəkli yadda saxla" (telefonda barmağını basılı saxla).</div>
   <canvas id="certCv" width="1600" height="1130"></canvas>
 </div></div>
-<div id="abc" role="dialog" aria-label="Od əlifbası"><div class="abc-in" id="abcIn"></div></div>
+<div class="toast" id="toast"></div>
 
 <script>
 // ===== OD — Azərbaycan dilində proqramlaşdırma dili: mühərrik =====
@@ -1489,174 +1645,543 @@ if (typeof module !== 'undefined') module.exports = { OD_LESSONS: OD_LESSONS, od
 
 </script>
 <script>
-(function(){
-  var $ = function(id){ return document.getElementById(id); };
+// Firebase layihəsinin açıq konfiqurasiyası.
+// Bu açarlar gizli deyil: veb-tətbiqlərdə hamıya görünür. Məlumatın təhlükəsizliyini
+// firestore.rules faylındakı qaydalar təmin edir.
+var OD_FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyDv_ibf10at6y3jVGqWTfLhBlXttl-uguQ',
+  authDomain: 'od-dili.firebaseapp.com',
+  projectId: 'od-dili',
+  storageBucket: 'od-dili.firebasestorage.app',
+  messagingSenderId: '161196823262',
+  appId: '1:161196823262:web:a958ffb68c499c689ee84f'
+};
+// Bulud yalnız bu ünvanlarda işləyir; başqa yerdə (məs. faylı birbaşa açanda) Od demo rejimə keçir.
+var OD_FIREBASE_HOSTS = ['sano8063.github.io', 'od-dili.web.app', 'od-dili.firebaseapp.com', 'localhost', '127.0.0.1'];
+
+</script>
+<script>
+// ===== Od Bulud — sinif, tapşırıq və göndərişlər üçün server qatı =====
+// İki sürücü eyni interfeysə malikdir:
+//   • firebase — əsl server (Firebase Auth + Firestore)
+//   • demo     — bütün məlumat bu brauzerdə saxlanılır (təqdimat və test üçün)
+(function (root) {
+  'use strict';
+
+  function now() { return Date.now(); }
+  function randCode() {
+    var A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', s = '';
+    for (var i = 0; i < 6; i++) s += A[Math.floor(Math.random() * A.length)];
+    return s;
+  }
+  function err(msg) { var e = new Error(msg); e.od = true; return e; }
+  function clean(o) { return JSON.parse(JSON.stringify(o)); }
+
+  // Firebase xətalarını Azərbaycan dilinə çevir
+  function authMsg(e) {
+    var c = (e && e.code) || '';
+    var map = {
+      'auth/email-already-in-use': 'Bu e-poçt artıq qeydiyyatdan keçib. "Daxil ol" bölməsindən gir.',
+      'auth/invalid-email': 'E-poçt ünvanı düzgün deyil.',
+      'auth/weak-password': 'Şifrə ən azı 6 simvol olmalıdır.',
+      'auth/user-not-found': 'Bu e-poçtla hesab tapılmadı.',
+      'auth/wrong-password': 'Şifrə səhvdir.',
+      'auth/invalid-credential': 'E-poçt və ya şifrə səhvdir.',
+      'auth/too-many-requests': 'Çox cəhd edildi. Bir az sonra yenidən yoxla.',
+      'auth/network-request-failed': 'İnternet bağlantısı yoxdur.',
+      'permission-denied': 'Bu əməliyyata icazən yoxdur.'
+    };
+    return map[c] || (e && e.od ? e.message : 'Xəta: ' + ((e && e.message) || e));
+  }
+
+  // ===================== DEMO sürücüsü =====================
+  function DemoDriver(storage) {
+    var KEY = 'od-demo-db';
+    var st = storage || (typeof localStorage !== 'undefined' ? localStorage : null);
+    var mem = null;
+    function load() {
+      if (mem) return mem;
+      var d = null; try { d = JSON.parse(st.getItem(KEY) || 'null'); } catch (e) {}
+      mem = d || { users: {}, creds: {}, classes: {}, members: {}, assignments: {}, submissions: {}, session: null, seq: 1 };
+      return mem;
+    }
+    function save() { try { st.setItem(KEY, JSON.stringify(mem)); } catch (e) {} fire(); }
+    function id(p) { var d = load(); return p + (d.seq++) + '_' + Math.random().toString(36).slice(2, 6); }
+    var authCbs = [], watchers = [];
+    function fire() { watchers.forEach(function (w) { try { w(); } catch (e) {} }); }
+    if (typeof window !== 'undefined') window.addEventListener('storage', function (e) { if (e.key === KEY) { mem = null; fire(); emitAuth(); } });
+    function me() { var d = load(); return d.session ? d.users[d.session] || null : null; }
+    function emitAuth() { var u = me(); authCbs.forEach(function (cb) { cb(u); }); }
+    function need(role) {
+      var u = me(); if (!u) throw err('Əvvəlcə daxil ol.');
+      if (role && u.rol !== role) throw err(role === 'muellim' ? 'Bu əməliyyat yalnız müəllim üçündür.' : 'Bu əməliyyat yalnız şagird üçündür.');
+      return u;
+    }
+    var P = function (fn) { return new Promise(function (res) { res(fn()); }); };
+
+    return {
+      mode: 'demo',
+      init: function () { return Promise.resolve(); },
+      onAuth: function (cb) { authCbs.push(cb); setTimeout(function () { cb(me()); }, 0); },
+      user: me,
+      signUp: function (email, pass, ad, rol) {
+        return P(function () {
+          var d = load(); email = String(email).trim().toLowerCase();
+          if (!/^\S+@\S+\.\S+$/.test(email)) throw err('E-poçt ünvanı düzgün deyil.');
+          if (String(pass).length < 6) throw err('Şifrə ən azı 6 simvol olmalıdır.');
+          if (!String(ad).trim()) throw err('Adını yaz.');
+          if (rol !== 'muellim' && rol !== 'sagird') throw err('Rolu seç.');
+          if (d.creds[email]) throw err('Bu e-poçt artıq qeydiyyatdan keçib. "Daxil ol" bölməsindən gir.');
+          var uid = id('u');
+          d.creds[email] = { uid: uid, pass: pass };
+          d.users[uid] = { uid: uid, email: email, ad: String(ad).trim(), rol: rol, siniflər: [], yaradılıb: now() };
+          d.session = uid; save(); emitAuth(); return d.users[uid];
+        });
+      },
+      signIn: function (email, pass) {
+        return P(function () {
+          var d = load(), c = d.creds[String(email).trim().toLowerCase()];
+          if (!c || c.pass !== pass) throw err('E-poçt və ya şifrə səhvdir.');
+          d.session = c.uid; save(); emitAuth(); return d.users[c.uid];
+        });
+      },
+      signOut: function () { return P(function () { load().session = null; save(); emitAuth(); }); },
+
+      createClass: function (ad) {
+        return P(function () {
+          var u = need('muellim'), d = load();
+          if (!String(ad).trim()) throw err('Sinfin adını yaz.');
+          var cid = id('c'), c = { id: cid, ad: String(ad).trim(), teacherId: u.uid, teacherName: u.ad, kod: randCode(), yaradılıb: now() };
+          d.classes[cid] = c; save(); return c;
+        });
+      },
+      joinClass: function (kod) {
+        return P(function () {
+          var u = need('sagird'), d = load(); kod = String(kod).trim().toUpperCase();
+          var c = Object.keys(d.classes).map(function (k) { return d.classes[k]; }).filter(function (x) { return x.kod === kod; })[0];
+          if (!c) throw err('Bu kodla sinif tapılmadı. Kodu müəllimindən yenidən soruş.');
+          d.members[c.id] = d.members[c.id] || {};
+          d.members[c.id][u.uid] = { uid: u.uid, ad: u.ad, qoşulub: now() };
+          if (u.siniflər.indexOf(c.id) < 0) u.siniflər.push(c.id);
+          save(); return c;
+        });
+      },
+      myClasses: function () {
+        return P(function () {
+          var u = need(), d = load();
+          var list = Object.keys(d.classes).map(function (k) { return d.classes[k]; });
+          return clean(list.filter(function (c) { return u.rol === 'muellim' ? c.teacherId === u.uid : u.siniflər.indexOf(c.id) >= 0; })
+            .sort(function (a, b) { return b.yaradılıb - a.yaradılıb; }));
+        });
+      },
+      classMembers: function (cid) {
+        return P(function () { need(); var m = load().members[cid] || {}; return clean(Object.keys(m).map(function (k) { return m[k]; })); });
+      },
+      createAssignment: function (data) {
+        return P(function () {
+          var u = need('muellim'), d = load(), c = d.classes[data.classId];
+          if (!c || c.teacherId !== u.uid) throw err('Sinif tapılmadı.');
+          if (!String(data.başlıq || '').trim()) throw err('Tapşırığın adını yaz.');
+          var aid = id('a');
+          d.assignments[aid] = Object.assign(clean(data), { id: aid, teacherId: u.uid, yaradılıb: now() });
+          save(); return d.assignments[aid];
+        });
+      },
+      deleteAssignment: function (aid) {
+        return P(function () { var u = need('muellim'), d = load(); if (d.assignments[aid] && d.assignments[aid].teacherId === u.uid) delete d.assignments[aid]; save(); });
+      },
+      assignmentsForClass: function (cid) {
+        return P(function () {
+          need(); var d = load();
+          return clean(Object.keys(d.assignments).map(function (k) { return d.assignments[k]; })
+            .filter(function (a) { return a.classId === cid; }).sort(function (a, b) { return b.yaradılıb - a.yaradılıb; }));
+        });
+      },
+      getAssignment: function (aid) { return P(function () { need(); var a = load().assignments[aid]; if (!a) throw err('Tapşırıq tapılmadı.'); return clean(a); }); },
+      submit: function (aid, payload) {
+        return P(function () {
+          var u = need('sagird'), d = load(), a = d.assignments[aid];
+          if (!a) throw err('Tapşırıq tapılmadı.');
+          if (u.siniflər.indexOf(a.classId) < 0) throw err('Bu sinfin üzvü deyilsən.');
+          var sid = aid + '_' + u.uid, prev = d.submissions[sid];
+          d.submissions[sid] = Object.assign(clean(payload), {
+            id: sid, aid: aid, classId: a.classId, teacherId: a.teacherId, başlıq: a.başlıq,
+            studentId: u.uid, studentName: u.ad, göndərilib: now(), oxundu: false, cəhd: (prev ? prev.cəhd || 1 : 0) + 1,
+            qiymət: prev ? prev.qiymət || null : null, şərh: prev ? prev.şərh || '' : ''
+          });
+          save(); return d.submissions[sid];
+        });
+      },
+      mySubmission: function (aid) { return P(function () { var u = need(); var s = load().submissions[aid + '_' + u.uid]; return s ? clean(s) : null; }); },
+      mySubmissions: function () {
+        return P(function () { var u = need(), d = load(); return clean(Object.keys(d.submissions).map(function (k) { return d.submissions[k]; }).filter(function (s) { return s.studentId === u.uid; })); });
+      },
+      submissionsForAssignment: function (aid) {
+        return P(function () {
+          var u = need('muellim'), d = load();
+          return clean(Object.keys(d.submissions).map(function (k) { return d.submissions[k]; }).filter(function (s) { return s.aid === aid && s.teacherId === u.uid; }));
+        });
+      },
+      watchInbox: function (cb) {
+        function run() {
+          var u = me(); if (!u || u.rol !== 'muellim') { cb([]); return; }
+          var d = load();
+          cb(clean(Object.keys(d.submissions).map(function (k) { return d.submissions[k]; }).filter(function (s) { return s.teacherId === u.uid; })
+            .sort(function (a, b) { return b.göndərilib - a.göndərilib; })));
+        }
+        watchers.push(run); run();
+        return function () { watchers = watchers.filter(function (w) { return w !== run; }); };
+      },
+      updateSubmission: function (sid, fields) {
+        return P(function () {
+          var u = need('muellim'), d = load(), s = d.submissions[sid];
+          if (!s || s.teacherId !== u.uid) throw err('Göndəriş tapılmadı.');
+          ['oxundu', 'qiymət', 'şərh'].forEach(function (k) { if (k in fields) s[k] = fields[k]; });
+          save();
+        });
+      },
+      _reset: function () { mem = null; try { st.removeItem(KEY); } catch (e) {} }
+    };
+  }
+
+  // ===================== FIREBASE sürücüsü =====================
+  function FirebaseDriver(config) {
+    var fb, auth, db, profile = null, authCbs = [], ready = null;
+    var V = '10.14.1', BASE = 'https://cdn.jsdelivr.net/npm/firebase@' + V + '/';
+    function loadScript(src) {
+      return new Promise(function (res, rej) {
+        var s = document.createElement('script'); s.src = src; s.onload = res;
+        s.onerror = function () { rej(err('Firebase yüklənmədi (' + src.split('/').pop() + ').')); };
+        document.head.appendChild(s);
+      });
+    }
+    function need(role) {
+      if (!profile) throw err('Əvvəlcə daxil ol.');
+      if (role && profile.rol !== role) throw err(role === 'muellim' ? 'Bu əməliyyat yalnız müəllim üçündür.' : 'Bu əməliyyat yalnız şagird üçündür.');
+      return profile;
+    }
+    function docs(q) { return q.get().then(function (s) { return s.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }); }); }
+    function wrap(p) { return p.catch(function (e) { throw err(authMsg(e)); }); }
+    function emit() { authCbs.forEach(function (cb) { cb(profile); }); }
+    function aCol(cid) { return db.collection('classes').doc(cid).collection('assignments'); }
+    function splitA(aid) { var i = String(aid).indexOf('~'); if (i < 0) throw err('Tapşırıq tapılmadı.'); return [aid.slice(0, i), aid.slice(i + 1)]; }
+
+    return {
+      mode: 'firebase',
+      init: function () {
+        if (ready) return ready;
+        ready = loadScript(BASE + 'firebase-app-compat.js')
+          .then(function () { return Promise.all([loadScript(BASE + 'firebase-auth-compat.js'), loadScript(BASE + 'firebase-firestore-compat.js')]); })
+          .then(function () {
+            fb = root.firebase; fb.initializeApp(config);
+            auth = fb.auth(); db = fb.firestore();
+            return new Promise(function (res) {
+              auth.onAuthStateChanged(function (u) {
+                if (!u) { profile = null; emit(); res(); return; }
+                db.collection('users').doc(u.uid).get().then(function (d) {
+                  profile = d.exists ? Object.assign({ uid: u.uid }, d.data()) : null; emit(); res();
+                }, function () { profile = null; emit(); res(); });
+              });
+            });
+          });
+        return ready;
+      },
+      onAuth: function (cb) { authCbs.push(cb); if (ready) cb(profile); },
+      user: function () { return profile; },
+      signUp: function (email, pass, ad, rol) {
+        if (!String(ad).trim()) return Promise.reject(err('Adını yaz.'));
+        if (rol !== 'muellim' && rol !== 'sagird') return Promise.reject(err('Rolu seç.'));
+        return wrap(auth.createUserWithEmailAndPassword(String(email).trim(), pass).then(function (cred) {
+          var p = { email: String(email).trim().toLowerCase(), ad: String(ad).trim(), rol: rol, siniflər: [], yaradılıb: now() };
+          return db.collection('users').doc(cred.user.uid).set(p).then(function () { profile = Object.assign({ uid: cred.user.uid }, p); emit(); return profile; });
+        }));
+      },
+      signIn: function (email, pass) {
+        return wrap(auth.signInWithEmailAndPassword(String(email).trim(), pass).then(function (cred) {
+          return db.collection('users').doc(cred.user.uid).get().then(function (d) {
+            if (!d.exists) throw err('Profil tapılmadı.');
+            profile = Object.assign({ uid: cred.user.uid }, d.data()); emit(); return profile;
+          });
+        }));
+      },
+      signOut: function () { return auth.signOut().then(function () { profile = null; emit(); }); },
+
+      createClass: function (ad) {
+        var u; try { u = need('muellim'); } catch (e) { return Promise.reject(e); }
+        if (!String(ad).trim()) return Promise.reject(err('Sinfin adını yaz.'));
+        var c = { ad: String(ad).trim(), teacherId: u.uid, teacherName: u.ad, kod: randCode(), yaradılıb: now() };
+        var ref = db.collection('classes').doc();
+        var batch = db.batch();
+        batch.set(ref, c);
+        batch.set(db.collection('codes').doc(c.kod), { classId: ref.id, teacherId: u.uid });
+        return wrap(batch.commit().then(function () { return Object.assign({ id: ref.id }, c); }));
+      },
+      joinClass: function (kod) {
+        var u; try { u = need('sagird'); } catch (e) { return Promise.reject(e); }
+        kod = String(kod).trim().toUpperCase();
+        if (!/^[A-Z0-9]{6}$/.test(kod)) return Promise.reject(err('Kod 6 simvoldan ibarət olmalıdır.'));
+        return wrap(db.collection('codes').doc(kod).get().then(function (cd) {
+          if (!cd.exists) throw err('Bu kodla sinif tapılmadı. Kodu müəllimindən yenidən soruş.');
+          var cid = cd.data().classId;
+          return db.collection('classes').doc(cid).collection('members').doc(u.uid).set({ uid: u.uid, ad: u.ad, qoşulub: now(), kod: kod })
+            .then(function () { return db.collection('users').doc(u.uid).update({ siniflər: fb.firestore.FieldValue.arrayUnion(cid) }); })
+            .then(function () { if (profile.siniflər.indexOf(cid) < 0) profile.siniflər.push(cid); return db.collection('classes').doc(cid).get(); })
+            .then(function (d) { return Object.assign({ id: d.id }, d.data()); });
+        }));
+      },
+      myClasses: function () {
+        var u; try { u = need(); } catch (e) { return Promise.reject(e); }
+        if (u.rol === 'muellim') return wrap(docs(db.collection('classes').where('teacherId', '==', u.uid)).then(function (l) { return l.sort(function (a, b) { return b.yaradılıb - a.yaradılıb; }); }));
+        return wrap(Promise.all((u.siniflər || []).map(function (cid) {
+          return db.collection('classes').doc(cid).get().then(function (d) { return d.exists ? Object.assign({ id: d.id }, d.data()) : null; });
+        })).then(function (l) { return l.filter(Boolean); }));
+      },
+      classMembers: function (cid) { return wrap(docs(db.collection('classes').doc(cid).collection('members'))); },
+      createAssignment: function (data) {
+        var u; try { u = need('muellim'); } catch (e) { return Promise.reject(e); }
+        if (!String(data.başlıq || '').trim()) return Promise.reject(err('Tapşırığın adını yaz.'));
+        var a = Object.assign(clean(data), { teacherId: u.uid, yaradılıb: now() });
+        return wrap(aCol(data.classId).add(a).then(function (r) { return Object.assign({ id: data.classId + '~' + r.id }, a); }));
+      },
+      deleteAssignment: function (aid) { var p = splitA(aid); return wrap(aCol(p[0]).doc(p[1]).delete()); },
+      assignmentsForClass: function (cid) {
+        return wrap(aCol(cid).get().then(function (s) {
+          return s.docs.map(function (d) { return Object.assign({}, d.data(), { id: cid + '~' + d.id }); }).sort(function (a, b) { return b.yaradılıb - a.yaradılıb; });
+        }));
+      },
+      getAssignment: function (aid) {
+        var p = splitA(aid);
+        return wrap(aCol(p[0]).doc(p[1]).get().then(function (d) { if (!d.exists) throw err('Tapşırıq tapılmadı.'); return Object.assign({}, d.data(), { id: aid }); }));
+      },
+      submit: function (aid, payload) {
+        var u; try { u = need('sagird'); } catch (e) { return Promise.reject(e); }
+        var sid = aid + '_' + u.uid, ref = db.collection('submissions').doc(sid), parts = splitA(aid);
+        return wrap(Promise.all([aCol(parts[0]).doc(parts[1]).get(), ref.get().catch(function () { return null; })]).then(function (r) {
+          var a = r[0]; if (!a.exists) throw err('Tapşırıq tapılmadı.');
+          var ad = a.data(), prev = r[1] && r[1].exists ? r[1].data() : null;
+          var s = Object.assign(clean(payload), {
+            aid: aid, aDoc: parts[1], classId: parts[0], teacherId: ad.teacherId, başlıq: ad.başlıq,
+            studentId: u.uid, studentName: u.ad, göndərilib: now(), oxundu: false, cəhd: (prev ? prev.cəhd || 1 : 0) + 1,
+            qiymət: prev ? (prev.qiymət === undefined ? null : prev.qiymət) : null, şərh: prev ? (prev.şərh === undefined ? '' : prev.şərh) : ''
+          });
+          return ref.set(s).then(function () { return Object.assign({ id: sid }, s); });
+        }));
+      },
+      mySubmission: function (aid) {
+        var u; try { u = need(); } catch (e) { return Promise.reject(e); }
+        return db.collection('submissions').doc(aid + '_' + u.uid).get().then(function (d) { return d.exists ? Object.assign({ id: d.id }, d.data()) : null; }, function () { return null; });
+      },
+      mySubmissions: function () {
+        var u; try { u = need(); } catch (e) { return Promise.reject(e); }
+        return wrap(docs(db.collection('submissions').where('studentId', '==', u.uid)));
+      },
+      submissionsForAssignment: function (aid) {
+        var u; try { u = need('muellim'); } catch (e) { return Promise.reject(e); }
+        return wrap(docs(db.collection('submissions').where('teacherId', '==', u.uid).where('aid', '==', aid)));
+      },
+      watchInbox: function (cb) {
+        if (!profile || profile.rol !== 'muellim') { cb([]); return function () {}; }
+        return db.collection('submissions').where('teacherId', '==', profile.uid).onSnapshot(function (s) {
+          cb(s.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }).sort(function (a, b) { return b.göndərilib - a.göndərilib; }));
+        }, function () { cb([]); });
+      },
+      updateSubmission: function (sid, fields) {
+        var f = {}; ['oxundu', 'qiymət', 'şərh'].forEach(function (k) { if (k in fields) f[k] = fields[k]; });
+        return wrap(db.collection('submissions').doc(sid).update(f));
+      }
+    };
+  }
+
+  // ===================== Seçim =====================
+  function create(opts) {
+    opts = opts || {};
+    var cfg = opts.config || (typeof root.OD_FIREBASE_CONFIG !== 'undefined' ? root.OD_FIREBASE_CONFIG : null);
+    var forceDemo = opts.demo || (typeof localStorage !== 'undefined' && localStorage.getItem('od-bulud-demo') === '1');
+    var hosts = typeof root.OD_FIREBASE_HOSTS !== 'undefined' ? root.OD_FIREBASE_HOSTS : null;
+    if (!opts.config && hosts && typeof location !== 'undefined' && hosts.indexOf(location.hostname) < 0) forceDemo = true;
+    if (cfg && cfg.apiKey && !forceDemo) return FirebaseDriver(cfg);
+    return DemoDriver(opts.storage);
+  }
+
+  // ===================== Ciddi rejim: siqnalların qiymətləndirilməsi =====================
+  function evaluateIntegrity(sig, starterLen, finalLen) {
+    var reasons = [];
+    var added = Math.max(0, finalLen - (starterLen || 0));
+    if (sig.yapışdırılan >= 40 || (added > 20 && sig.yapışdırılan > added * 0.3))
+      reasons.push('Kod yapışdırılıb: ' + sig.yapışdırılan + ' simvol (' + sig.yapışdırma.length + ' dəfə)');
+    if (sig.çıxış >= 3 || sig.çıxışMs >= 60000)
+      reasons.push('Səhifədən ' + sig.çıxış + ' dəfə çıxıb (cəmi ' + Math.round(sig.çıxışMs / 1000) + ' san)');
+    if (added > 60 && sig.düymə < added * 0.5)
+      reasons.push('Kodun çox hissəsi klaviaturada yazılmadan əlavə olunub (' + sig.düymə + ' düymə, ' + added + ' yeni simvol)');
+    if (added > 150 && sig.aktivMs < 20000)
+      reasons.push('Çox qısa vaxtda çox kod: ' + Math.round(sig.aktivMs / 1000) + ' saniyədə ' + added + ' simvol');
+    return { şübhəli: reasons.length > 0, səbəblər: reasons };
+  }
+
+  // Yazılışın təkrar oynadılması: əməliyyatları ardıcıl tətbiq et
+  function replayAt(starter, ops, uptoIndex) {
+    var s = starter || '';
+    for (var i = 0; i < Math.min(ops.length, uptoIndex); i++) {
+      var o = ops[i]; // [vaxt, mövqe, silinən, əlavə]
+      s = s.slice(0, o[1]) + (o[3] || '') + s.slice(o[1] + o[2]);
+    }
+    return s;
+  }
+  function diffOp(prev, next, t) {
+    if (prev === next) return null;
+    var a = 0, pl = prev.length, nl = next.length;
+    while (a < pl && a < nl && prev[a] === next[a]) a++;
+    var b = 0;
+    while (b < pl - a && b < nl - a && prev[pl - 1 - b] === next[nl - 1 - b]) b++;
+    return [t, a, pl - a - b, next.slice(a, nl - b)];
+  }
+
+  root.OdCloud = { create: create, DemoDriver: DemoDriver, FirebaseDriver: FirebaseDriver, evaluateIntegrity: evaluateIntegrity, replayAt: replayAt, diffOp: diffOp, authMsg: authMsg };
+  if (typeof module !== 'undefined') module.exports = root.OdCloud;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+// ===== Od — redaktor, konsol, lövhə, dərslər, ayarlar =====
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
   var code = $('code'), hl = $('hl'), gutter = $('gutter'), cons = $('console');
   var errLine = null, current = null;
 
-  // ---- Lüğət ----
-  var REF = [
-    ['Əsaslar', [
-      ['göstər(x, y)', 'Ekrana yazır'],
-      ['ad = "Sano"', 'Dəyişən yaradır'],
-      ['daxil_et("Sual:")', 'İstifadəçidən cavab alır'],
-      ['# şərh', 'Proqram bunu oxumur'],
-    ]],
-    ['Şərtlər', [
-      ['əgər x > 5:', 'Şərt doğrudursa içini edir'],
-      ['yoxsa əgər x == 5:', 'Başqa şərt'],
-      ['yoxsa:', 'Heç biri olmadısa'],
-      ['və  ·  və ya  ·  deyil', 'Məntiq: and, or, not'],
-      ['doğru · yalan · heç', 'true, false, null'],
-    ]],
-    ['Dövrlər', [
-      ['təkrarla 5 dəfə:', '5 dəfə təkrarlayır'],
-      ['hər x siyahı içində:', 'Siyahının hər elementi üçün'],
-      ['nə qədər ki x < 10:', 'Şərt doğru olduqca'],
-      ['dayan · davam', 'Dövrü bitir · növbətiyə keç'],
-    ]],
-    ['Funksiyalar', [
-      ['funksiya topla(a, b):', 'Öz funksiyanı yarat'],
-      ['qaytar a + b', 'Nəticəni geri verir'],
-      ['təsadüfi(1, 10)', 'Təsadüfi ədəd'],
-      ['aralıq(1, 10)', '[1, 2, ... 10]'],
-      ['uzunluq(x) · cəm(s) · kök(x)', 'Uzunluq, cəm, kvadrat kök'],
-      ['ən_böyük · ən_kiçik · yuvarlaq', 'Max, min, yuvarlaqlaşdırma'],
-      ['mətn(x) · ədəd(x) · tip(x)', 'Çevirmə və tip'],
-    ]],
-    ['Siyahı və mətn', [
-      ['s.əlavə_et(x) · s.sil(i) · s.çıxar(x)', 'Əlavə et / indeksə görə sil / dəyərə görə sil'],
-      ['s.əvvələ_əlavə_et(x) · s.indeks(x) · s.son()', 'Əvvələ əlavə · harada? · sonuncu'],
-      ['s.sırala() · s.tərsinə()', 'Sırala / tərsinə çevir'],
-      ['s.var(x) · s.uzunluq', 'Varmı? / Neçə dənə?'],
-      ['m.böyük() · m.kiçik()', 'BÖYÜK / kiçik hərf'],
-      ['m.böl(" ") · m.əvəz_et(a, b)', 'Böl / əvəz et'],
-    ]],
-    ['Oyun 🎮 (lövhə 600 × 600)', [
-      ['kadr()', 'Növbəti kadrı gözlə (saniyədə ~60 dəfə)'],
-      ['basılıb("sol")', 'Düymə basılı saxlanılır? sol, sağ, yuxarı, aşağı, boşluq, a…z'],
-      ['basıldı("boşluq")', 'Düymə indicə basıldı? (bir dəfə)'],
-      ['lövhəni_təmizlə("qara")', 'Lövhəni rənglə doldur'],
-      ['düzbucaqlı(x, y, en, hünd, rəng)', 'Düzbucaqlı çək'],
-      ['dairə_çək(x, y, r, rəng) · üçbucaq(...)', 'Dairə · üçbucaq (6 koordinat + rəng)'],
-      ['xətt(x1, y1, x2, y2, rəng)', 'Xətt çək'],
-      ['mətn_yaz(m, x, y, ölçü, rəng, stil)', 'Lövhəyə yazı · mərkəzdə_yaz(m, y, ölçü, rəng, stil)'],
-      ['stil: "qalın" "incə" "adi" "maili"', 'Birləşdirmək olar: "qalın maili xətli"'],
-      ['stil: "xətli" "üstüxətli" "kod" "klassik"', 'Altından xətt · üstündən xətt · kod şrifti · klassik şrift'],
-      ['toqquşur(x1,y1,en1,hünd1, x2,y2,en2,hünd2)', 'İki düzbucaqlı toxunur?'],
-      ['siçan_x() · siçan_y() · klikləndi()', 'Siçan / barmaq'],
-    ]],
-    ['Xətalar və obyektlər', [
-      ['sına:  …  xəta olsa səbəb:', 'Xətanı tut, proqram dayanmasın'],
-      ['xəta_at("mesaj")', 'Öz xətanı yarat'],
-      ['top = {x: 10, y: 20}', 'Obyekt yarat · top.x += 5'],
-    ]],
-    ['Rəsm 🎨', [
-      ['irəli(100) · geri(50)', 'Qələmi hərəkət etdir'],
-      ['sağa(90) · sola(45)', 'Dön (dərəcə)'],
-      ['rəng("qırmızı")', 'qırmızı, yaşıl, mavi, sarı, narıncı, bənövşəyi, çəhrayı, göy, qızılı...'],
-      ['qələm_qaldır() · qələm_endir()', 'İz qoymadan get'],
-      ['qalınlıq(3) · sürət(1-10)', 'Xətt qalınlığı · sürət'],
-      ['dairə(50) · mərkəzə() · arxa_fon("qara")', 'Dairə, mərkəzə qayıt, fon'],
-      ['gözlə(1) · rəsmə_yaz("Salam")', '1 saniyə gözlə · lövhəyə yazı yaz'],
-    ]],
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function store(k, v) { try { localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v)); } catch (e) {} }
+  function fetchStore(k, json) { try { var v = localStorage.getItem(k); return json ? (v ? JSON.parse(v) : null) : v; } catch (e) { return null; } }
+
+  // ---- İkonlar (sadə xətt ikonları) ----
+  var ICONS = {
+    files: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13l-2 2 2 2M15 13l2 2-2 2"/>',
+    book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M9 7h6"/>',
+    users: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2A4.5 4.5 0 0 1 21 18.5"/>',
+    type: '<path d="M4 19 9.5 5h1L16 19"/><path d="M6.3 14h7.4"/><path d="M17 11h4M19 9v4"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+    play: '<path d="M7 5v14l11-7z"/>',
+    stop: '<rect x="6" y="6" width="12" height="12" rx="1.5"/>',
+    copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>',
+    bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
+    shield: '<path d="M12 3 4.5 6v6c0 4.5 3.2 7.6 7.5 9 4.3-1.4 7.5-4.5 7.5-9V6z"/><path d="m9 12 2 2 4-4"/>',
+    file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>',
+    game: '<rect x="2.5" y="7" width="19" height="10" rx="4"/><path d="M7 10v4M5 12h4"/><circle cx="16" cy="11" r=".6"/><circle cx="18" cy="13" r=".6"/>',
+    brush: '<path d="M18.4 2.6a2 2 0 0 1 2.9 2.9L11 15.8 8.2 13z"/><path d="M8 14c-2.5 0-4 1.6-4 4 0 1.2-.6 2-2 2 1.2 1.3 3 2 5 2 2.8 0 5-2.2 5-5z"/>',
+    check: '<path d="m5 12 5 5L20 7"/>',
+    cloud: '<path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 1 0 6 16.5"/><path d="M6 19h11.5"/>',
+    send: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>',
+    back: '<path d="M15 18l-6-6 6-6"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    flag: '<path d="M4 22V4"/><path d="M4 4h12l-2 4 2 4H4"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/>'
+  };
+  function icon(n) { return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[n] || '') + '</svg>'; }
+  function applyIcons(root) {
+    (root || document).querySelectorAll('[data-icon]').forEach(function (el) {
+      if (el.dataset.iconDone) return; el.dataset.iconDone = '1';
+      el.insertAdjacentHTML('afterbegin', icon(el.dataset.icon));
+    });
+  }
+  applyIcons();
+
+  // ---- Ayarlar ----
+  var THEMES = [
+    { id: 'qaranliq', ad: 'Qaranlıq', pv: ['#1b1d22', '#272a31', '#d38cf0', '#6cb6ff'] },
+    { id: 'isiqli', ad: 'İşıqlı', pv: ['#f6f7f9', '#ffffff', '#8250df', '#0b62d6'] },
+    { id: 'gece', ad: 'Gecə mavisi', pv: ['#0e1522', '#172236', '#c4a7ff', '#7cc4ff'] },
+    { id: 'kontrast', ad: 'Yüksək kontrast', pv: ['#000000', '#0d0d0d', '#ff9cff', '#7fdbff'] }
   ];
-  $('ref').innerHTML = REF.map(function(g){
-    return '<h4>'+g[0]+'</h4><table>'+g[1].map(function(r){ return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td></tr>'; }).join('')+'</table>';
-  }).join('');
+  var ACCENTS = [
+    { id: 'od', ad: 'Od narıncısı', c: '#e8692c' }, { id: 'mavi', ad: 'Mavi', c: '#2f81f7' },
+    { id: 'yasil', ad: 'Yaşıl', c: '#1f9d55' }, { id: 'benovseyi', ad: 'Bənövşəyi', c: '#8b5cf6' },
+    { id: 'qirmizi', ad: 'Qırmızı', c: '#e11d48' }, { id: 'firuze', ad: 'Firuzə', c: '#0d9488' }
+  ];
+  var SET = Object.assign({ theme: 'qaranliq', accent: 'od', fs: 14, lines: true, pairs: true, sideW: 300 }, fetchStore('od-ayarlar', true) || {});
+  function applySettings() {
+    document.documentElement.setAttribute('data-theme', SET.theme);
+    var a = ACCENTS.filter(function (x) { return x.id === SET.accent; })[0] || ACCENTS[0];
+    document.documentElement.style.setProperty('--accent', a.c);
+    document.documentElement.style.setProperty('--fs', SET.fs + 'px');
+    $('editorBox').classList.toggle('nolines', !SET.lines);
+    store('od-ayarlar', SET);
+    if (typeof highlight === 'function') highlight();
+  }
+  function renderSettings() {
+    var h = '<div class="sec"><h4>Mövzu</h4><div class="themes">' + THEMES.map(function (t) {
+      return '<button class="th' + (SET.theme === t.id ? ' on' : '') + '" data-theme="' + t.id + '"><div class="pv">' +
+        t.pv.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</div>' + t.ad + '</button>';
+    }).join('') + '</div></div>';
+    h += '<div class="sec"><h4>Vurğu rəngi</h4><div class="swatches">' + ACCENTS.map(function (a) {
+      return '<button class="sw' + (SET.accent === a.id ? ' on' : '') + '" data-acc="' + a.id + '" title="' + a.ad + '" style="background:' + a.c + '"></button>';
+    }).join('') + '</div></div>';
+    h += '<div class="sec"><h4>Redaktor</h4><div class="field"><label>Şrift ölçüsü: <b id="fsVal">' + SET.fs + 'px</b></label>' +
+      '<input type="range" min="12" max="22" step="1" value="' + SET.fs + '" id="fsRange"></div>' +
+      '<label class="switch">Sətir nömrələri<input type="checkbox" id="optLines"' + (SET.lines ? ' checked' : '') + '></label>' +
+      '<label class="switch">Dırnaq və mötərizəni avtomatik bağla<input type="checkbox" id="optPairs"' + (SET.pairs ? ' checked' : '') + '></label></div>';
+    h += '<div class="sec"><h4>Məlumat</h4><p class="phil">Ayarlar bu brauzerdə saxlanılır. Kod sənin cihazında işləyir və heç bir serverə göndərilmir (yalnız sinif tapşırığını göndərəndə).</p>' +
+      '<div class="row" style="margin-top:10px"><button class="btn sm" id="resetSet">Ayarları sıfırla</button></div></div>';
+    $('pane-ayarlar').innerHTML = h;
+    $('pane-ayarlar').querySelectorAll('.th').forEach(function (b) { b.onclick = function () { SET.theme = b.dataset.theme; applySettings(); renderSettings(); }; });
+    $('pane-ayarlar').querySelectorAll('.sw').forEach(function (b) { b.onclick = function () { SET.accent = b.dataset.acc; applySettings(); renderSettings(); }; });
+    $('fsRange').oninput = function () { SET.fs = +this.value; $('fsVal').textContent = SET.fs + 'px'; applySettings(); };
+    $('optLines').onchange = function () { SET.lines = this.checked; applySettings(); };
+    $('optPairs').onchange = function () { SET.pairs = this.checked; applySettings(); };
+    $('resetSet').onclick = function () { SET = { theme: 'qaranliq', accent: 'od', fs: 14, lines: true, pairs: true }; applySettings(); renderSettings(); toast('Ayarlar sıfırlandı'); };
+  }
 
   // ---- Sintaksis rəngləmə ----
-  var KWF = ['sina','eger','yoxsa','ne','qeder','ki','tekrarla','defe','her','icinde','ucun','funksiya','qaytar','dayan','davam','ve','ya','deyil'];
-  var BOOLF = ['dogru','yalan','hec'];
-  var BIF = ['goster','daxil_et','gozle','uzunluq','tesadufi','araliq','yuvarlaq','asagi','yuxari','tam_bol','kok','mutleq','quvvet','en_boyuk','en_kicik','cem','metn','eded','siyahi','tip','temizle','ireli','geri','saga','sola','daire','merkeze','reng','qelem_qaldir','qelem_endir','qalinliq','suret','arxa_fon','resme_yaz','kadr','basilib','basildi','lovheni_temizle','duzbucaqli','daire_cek','ucbucaq','xett','metn_yaz','merkezde_yaz','toqqusur','mesafe','vaxt','sican_x','sican_y','kliklendi','xeta_at'];
-  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function highlight(){
-    var src = code.value;
-    var lines = src.split('\n');
-    var html = lines.map(function(line, i){
-      var out = '', re = /(#.*$)|("(?:\\.|[^"\\])*"?|'(?:\\.|[^'\\])*'?)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_\u00C0-\u024F\u0259\u018F][A-Za-z0-9_\u00C0-\u024F\u0259\u018F\u0307]*)/g, m, last = 0;
-      while ((m = re.exec(line))) {
-        out += esc(line.slice(last, m.index));
-        if (m[1]) out += '<span class="cm">'+esc(m[1])+'</span>';
-        else if (m[2]) { var closedStr = m[2].length > 1 && m[2][m[2].length-1] === m[2][0] && m[2][m[2].length-2] !== '\\'; out += '<span class="'+(closedStr?'str':'strbad')+'" '+(closedStr?'':'title="Dırnaq bağlanmayıb"')+'>'+esc(m[2])+'</span>'; }
-        else if (m[3]) out += '<span class="num">'+m[3]+'</span>';
-        else {
-          var f = Od.canon(m[4]);
-          var prevDot = line[m.index-1] === '.';
-          if (!prevDot && KWF.indexOf(f) >= 0) out += '<span class="kw">'+esc(m[4])+'</span>';
-          else if (!prevDot && BOOLF.indexOf(f) >= 0) out += '<span class="bool">'+esc(m[4])+'</span>';
-          else if (BIF.indexOf(f) >= 0 || prevDot || line[re.lastIndex] === '(') out += '<span class="fn">'+esc(m[4])+'</span>';
-          else out += esc(m[4]);
-        }
-        last = re.lastIndex;
+  var KWF = ['sina', 'eger', 'yoxsa', 'ne', 'qeder', 'ki', 'tekrarla', 'defe', 'her', 'icinde', 'ucun', 'funksiya', 'qaytar', 'dayan', 'davam', 've', 'ya', 'deyil'];
+  var BOOLF = ['dogru', 'yalan', 'hec'];
+  var BIF = ['goster', 'daxil_et', 'gozle', 'uzunluq', 'tesadufi', 'araliq', 'yuvarlaq', 'asagi', 'yuxari', 'tam_bol', 'kok', 'mutleq', 'quvvet', 'en_boyuk', 'en_kicik', 'cem', 'metn', 'eded', 'siyahi', 'tip', 'temizle', 'ireli', 'geri', 'saga', 'sola', 'daire', 'merkeze', 'reng', 'qelem_qaldir', 'qelem_endir', 'qalinliq', 'suret', 'arxa_fon', 'resme_yaz', 'kadr', 'basilib', 'basildi', 'lovheni_temizle', 'duzbucaqli', 'daire_cek', 'ucbucaq', 'xett', 'metn_yaz', 'merkezde_yaz', 'toqqusur', 'mesafe', 'vaxt', 'sican_x', 'sican_y', 'kliklendi', 'xeta_at'];
+  function highlightLine(line) {
+    var out = '', re = /(#.*$)|("(?:\\.|[^"\\])*"?|'(?:\\.|[^'\\])*'?)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_\u00C0-\u024F\u0259\u018F][A-Za-z0-9_\u00C0-\u024F\u0259\u018F\u0307]*)/g, m, last = 0;
+    while ((m = re.exec(line))) {
+      out += esc(line.slice(last, m.index));
+      if (m[1]) out += '<span class="cm">' + esc(m[1]) + '</span>';
+      else if (m[2]) {
+        var closed = m[2].length > 1 && m[2][m[2].length - 1] === m[2][0] && m[2][m[2].length - 2] !== '\\';
+        out += '<span class="' + (closed ? 'str' : 'strbad') + '"' + (closed ? '' : ' title="Dırnaq bağlanmayıb"') + '>' + esc(m[2]) + '</span>';
       }
-      out += esc(line.slice(last));
-      return (errLine === i+1 ? '<span class="errline">'+(out||' ')+'</span>' : out);
+      else if (m[3]) out += '<span class="num">' + m[3] + '</span>';
+      else {
+        var f = Od.canon(m[4]), prevDot = line[m.index - 1] === '.';
+        if (!prevDot && KWF.indexOf(f) >= 0) out += '<span class="kw">' + esc(m[4]) + '</span>';
+        else if (!prevDot && BOOLF.indexOf(f) >= 0) out += '<span class="bool">' + esc(m[4]) + '</span>';
+        else if (BIF.indexOf(f) >= 0 || prevDot || line[re.lastIndex] === '(') out += '<span class="fn">' + esc(m[4]) + '</span>';
+        else out += esc(m[4]);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(line.slice(last));
+  }
+  function highlightCode(src) { return src.split('\n').map(highlightLine).join('\n'); }
+  function highlight() {
+    var lines = code.value.split('\n');
+    hl.innerHTML = lines.map(function (l, i) {
+      var o = highlightLine(l);
+      return errLine === i + 1 ? '<span class="errline">' + (o || ' ') + '</span>' : o;
     }).join('\n') + '\n';
-    hl.innerHTML = html;
     var g = '';
-    for (var i = 1; i <= lines.length; i++) g += '<div'+(errLine===i?' class="err"':'')+'>'+i+'</div>';
+    for (var i = 1; i <= lines.length; i++) g += '<div' + (errLine === i ? ' class="err"' : '') + '>' + i + '</div>';
     gutter.innerHTML = g;
     syncScroll();
   }
-  function syncScroll(){ hl.scrollTop = code.scrollTop; hl.scrollLeft = code.scrollLeft; gutter.scrollTop = code.scrollTop; }
-  code.addEventListener('input', function(){ errLine = null; highlight(); save(); });
+  function syncScroll() { hl.scrollTop = code.scrollTop; hl.scrollLeft = code.scrollLeft; gutter.scrollTop = code.scrollTop; }
+  function updatePos() {
+    var v = code.value.slice(0, code.selectionStart), ln = v.split('\n');
+    $('sbPos').textContent = 'Sətir ' + ln.length + ', Sütun ' + (ln[ln.length - 1].length + 1);
+  }
+  code.addEventListener('input', function () { errLine = null; highlight(); saveCtx(); updatePos(); });
   code.addEventListener('scroll', syncScroll);
+  code.addEventListener('keyup', updatePos);
+  code.addEventListener('click', updatePos);
 
-  // Tab, Enter avtomatik girinti
-  code.addEventListener('keydown', function(e){
-    var s = code.selectionStart, en = code.selectionEnd, v = code.value;
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); runProgram(); return; }
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      if (e.shiftKey) {
-        var ls = v.lastIndexOf('\n', s-1)+1, rm = v.slice(ls).match(/^ {1,4}/);
-        if (rm) { code.value = v.slice(0,ls)+v.slice(ls+rm[0].length); code.selectionStart = code.selectionEnd = Math.max(ls, s-rm[0].length); }
-      } else { insertText('    '); }
-      highlight(); save(); return;
-    }
-    if (PAIRS[e.key] && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      var nextCh = v[s], prevCh = v[s-1] || '';
-      var isQuote = e.key === '"' || e.key === "'";
-      if (isQuote && s === en && nextCh === e.key && inOpenString(v, s)) { e.preventDefault(); code.selectionStart = code.selectionEnd = s + 1; return; }
-      if (s !== en) {
-        e.preventDefault();
-        var sel = v.slice(s, en);
-        insertText(e.key + sel + PAIRS[e.key]);
-        code.selectionStart = s + 1; code.selectionEnd = s + 1 + sel.length;
-        highlight(); save(); return;
-      }
-      if (isQuote && (/[A-Za-z0-9_\u00C0-\u024F\u0259]/.test(prevCh) || inOpenString(v, s))) return;
-      if (nextCh === undefined || nextCh === '\n' || /[\s)\]},:]/.test(nextCh)) {
-        e.preventDefault();
-        insertText(e.key + PAIRS[e.key]);
-        code.selectionStart = code.selectionEnd = s + 1;
-        highlight(); save(); return;
-      }
-      return;
-    }
-    if ((e.key === ')' || e.key === ']' || e.key === '}') && s === en && v[s] === e.key) {
-      e.preventDefault(); code.selectionStart = code.selectionEnd = s + 1; return;
-    }
-    if (e.key === 'Backspace' && s === en && s > 0 && PAIRS[v[s-1]] && v[s] === PAIRS[v[s-1]]) {
-      e.preventDefault();
-      code.selectionStart = s - 1; code.selectionEnd = s + 1;
-      insertText('');
-      highlight(); save(); return;
-    }
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      var lineStart = v.lastIndexOf('\n', s-1)+1;
-      var cur = v.slice(lineStart, s);
-      var ind = cur.match(/^ */)[0];
-      if (/:\s*(#.*)?$/.test(cur)) ind += '    ';
-      insertText('\n'+ind);
-      highlight(); save();
-    }
-  });
-  // Kursorun yerində açıq dırnaq varmı? (eyni sətirdə)
-  function inOpenString(v, pos){
-    var ls = v.lastIndexOf('\n', pos-1)+1, q = null;
+  var PAIRS = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
+  function inOpenString(v, pos) {
+    var ls = v.lastIndexOf('\n', pos - 1) + 1, q = null;
     for (var i = ls; i < pos; i++) {
       var c = v[i];
       if (q) { if (c === '\\') { i++; continue; } if (c === q) q = null; }
@@ -1665,480 +2190,990 @@ if (typeof module !== 'undefined') module.exports = { OD_LESSONS: OD_LESSONS, od
     }
     return !!q;
   }
-  function insertText(t){
+  function insertText(t) {
     var ok = false;
-    try { ok = document.execCommand('insertText', false, t); } catch(err) {}
+    try { ok = document.execCommand('insertText', false, t); } catch (err) {}
     if (!ok) {
       var s = code.selectionStart, e = code.selectionEnd;
-      code.value = code.value.slice(0,s)+t+code.value.slice(e);
+      code.value = code.value.slice(0, s) + t + code.value.slice(e);
       code.selectionStart = code.selectionEnd = s + t.length;
+      code.dispatchEvent(new Event('input'));
     }
   }
-  var PAIRS = {'(':')','[':']','{':'}','"':'"',"'":"'"};
-
-  // ---- Yaddaş (layihə qaralaması) ----
-  function save(){ if (typeof lessonsMode !== 'undefined' && lessonsMode) { storeLessonCode(); return; } try { localStorage.setItem('od-kod', code.value); } catch(e){} }
-  function load(){ try { return localStorage.getItem('od-kod'); } catch(e){ return null; } }
-
-  // ---- Nümunələr ----
-  var sel = $('examples');
-  sel.innerHTML = '<option value="">📚 Nümunələr…</option>' + OD_EXAMPLES.map(function(x,i){ return '<option value="'+i+'">'+x.ad+'</option>'; }).join('');
-  sel.addEventListener('change', function(){
-    if (sel.value === '') return;
-    if (lessonsMode) exitLessons();
-    code.value = OD_EXAMPLES[+sel.value].kod; errLine = null; highlight(); save(); sel.value = '';
-    code.focus();
+  code.addEventListener('keydown', function (e) {
+    if (code.readOnly) return;
+    var s = code.selectionStart, en = code.selectionEnd, v = code.value;
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); runProgram(); return; }
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      if (e.shiftKey) {
+        var ls = v.lastIndexOf('\n', s - 1) + 1, rm = v.slice(ls).match(/^ {1,4}/);
+        if (rm) { code.selectionStart = ls; code.selectionEnd = ls + rm[0].length; insertText(''); code.selectionStart = code.selectionEnd = Math.max(ls, s - rm[0].length); }
+      } else insertText('    ');
+      return;
+    }
+    if (SET.pairs && PAIRS[e.key] && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      var nextCh = v[s], prevCh = v[s - 1] || '', isQuote = e.key === '"' || e.key === "'";
+      if (isQuote && s === en && nextCh === e.key && inOpenString(v, s)) { e.preventDefault(); code.selectionStart = code.selectionEnd = s + 1; return; }
+      if (s !== en) {
+        e.preventDefault();
+        var sel = v.slice(s, en);
+        insertText(e.key + sel + PAIRS[e.key]);
+        code.selectionStart = s + 1; code.selectionEnd = s + 1 + sel.length; return;
+      }
+      if (isQuote && (/[A-Za-z0-9_\u00C0-\u024F\u0259]/.test(prevCh) || inOpenString(v, s))) return;
+      if (nextCh === undefined || nextCh === '\n' || /[\s)\]},:]/.test(nextCh)) {
+        e.preventDefault(); insertText(e.key + PAIRS[e.key]); code.selectionStart = code.selectionEnd = s + 1; return;
+      }
+      return;
+    }
+    if (SET.pairs && (e.key === ')' || e.key === ']' || e.key === '}') && s === en && v[s] === e.key) { e.preventDefault(); code.selectionStart = code.selectionEnd = s + 1; return; }
+    if (SET.pairs && e.key === 'Backspace' && s === en && s > 0 && PAIRS[v[s - 1]] && v[s] === PAIRS[v[s - 1]]) {
+      e.preventDefault(); code.selectionStart = s - 1; code.selectionEnd = s + 1; insertText(''); return;
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var cur = v.slice(v.lastIndexOf('\n', s - 1) + 1, s), ind = cur.match(/^ */)[0];
+      if (/:\s*(#.*)?$/.test(cur)) ind += '    ';
+      insertText('\n' + ind);
+    }
   });
 
-  // ---- Tablar ----
-  function showTab(name){
-    document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.tab === name); });
+  // ---- Kontekst: sərbəst kod / dərs / tapşırıq ----
+  var ctx = null;
+  function setContext(c, text) {
+    ctx = c;
+    code.readOnly = !!c.readOnly;
+    code.value = text == null ? '' : text;
+    errLine = null; highlight(); updatePos();
+    code.scrollTop = 0; syncScroll();
+    $('ftab').innerHTML = icon(c.icon || 'file') + '<span>' + esc(c.title) + '</span>';
+    $('crumb').innerHTML = esc(c.crumb || '') ;
+    $('sbMode').textContent = c.mode || '';
+    $('strictBanner').classList.toggle('on', !!c.strict);
+    renderEdTools();
+  }
+  function saveCtx() { if (ctx && ctx.save && !code.readOnly) ctx.save(code.value); }
+  function renderEdTools() {
+    var t = $('edTools'); t.innerHTML = '';
+    (ctx && ctx.tools || []).forEach(function (tool) {
+      var b = document.createElement('button');
+      b.className = 'btn sm ' + (tool.cls || '');
+      b.innerHTML = (tool.icon ? icon(tool.icon) : '') + esc(tool.label);
+      b.onclick = tool.onClick; t.appendChild(b);
+    });
+  }
+  function freeContext(text) {
+    setContext({ type: 'free', title: 'proqram.od', crumb: 'Mənim kodum', mode: 'Sərbəst rejim', icon: 'file',
+      save: function (v) { store('od-kod', v); } }, text != null ? text : (fetchStore('od-kod') || OD_EXAMPLES[0].kod));
+    if (text != null) store('od-kod', text);
+  }
+
+  // ---- Panellər ----
+  var PANES = { kod: 'Kod', dersler: 'Dərslər', sinif: 'Sinif', elifba: 'Od əlifbası', ayarlar: 'Ayarlar' };
+  var curPane = 'kod';
+  function showPane(name, opts) {
+    opts = opts || {};
+    var side = $('side');
+    if (name === curPane && !side.classList.contains('closed') && opts.toggle) { side.classList.add('closed'); markActs(null); return; }
+    curPane = name; side.classList.remove('closed');
+    document.querySelectorAll('.pane').forEach(function (p) { p.classList.toggle('on', p.id === 'pane-' + name); });
+    $('sideTitle').textContent = PANES[name];
+    side.style.setProperty('--side-w', name === 'dersler' || name === 'sinif' ? '380px' : '300px');
+    markActs(name);
+    if (name === 'dersler') enterLessons();
+    if (name === 'ayarlar') renderSettings();
+    if (window.OdClassroom && name === 'sinif') window.OdClassroom.render();
+  }
+  function markActs(name) { document.querySelectorAll('.act').forEach(function (a) { a.classList.toggle('on', a.dataset.pane === name); }); }
+  document.querySelectorAll('.act').forEach(function (a) { a.onclick = function () { showPane(a.dataset.pane, { toggle: true }); }; });
+
+  // Kod paneli: nümunələr
+  var GROUPS = [
+    { ad: 'Əsaslar', ids: ['salam', 'cedvel', 'funksiya', 'siyahi', 'herfsiz'] },
+    { ad: 'Oyunlar', ids: ['oyun', 'ilan', 'kerpic', 'kosmos'], icon: 'game' },
+    { ad: 'Rəsm və yazı', ids: ['resm', 'ulduz', 'yazi'], icon: 'brush' }
+  ];
+  function renderKodPane() {
+    var h = '<div class="sec" style="padding:8px 0"><h4 style="padding:4px 14px">Fayl</h4><div class="list">' +
+      '<button class="item" id="myCode">' + icon('file') + 'proqram.od<span class="meta">mənim kodum</span></button>' +
+      '<button class="item" id="newCode">' + icon('plus') + 'Yeni boş fayl</button></div></div>';
+    GROUPS.forEach(function (g) {
+      h += '<div class="sec" style="padding:8px 0"><h4 style="padding:4px 14px">' + g.ad + '</h4><div class="list">';
+      g.ids.forEach(function (id) {
+        var ex = OD_EXAMPLES.filter(function (x) { return x.id === id; })[0]; if (!ex) return;
+        var name = ex.ad.replace(/^[^\wƏəÖöÜüŞşÇçĞğİıA-Za-z]+/, '').replace(/^Oyun:\s*/, '');
+        h += '<button class="item" data-ex="' + id + '">' + icon(g.icon || 'file') + esc(name) + '</button>';
+      });
+      h += '</div></div>';
+    });
+    $('pane-kod').innerHTML = h;
+    $('myCode').onclick = function () { freeContext(); };
+    $('newCode').onclick = function () { freeContext('# Yeni proqram\n'); code.focus(); };
+    $('pane-kod').querySelectorAll('[data-ex]').forEach(function (b) {
+      b.onclick = function () {
+        var ex = OD_EXAMPLES.filter(function (x) { return x.id === b.dataset.ex; })[0];
+        freeContext(ex.kod); toast('Nümunə açıldı: ' + ex.ad.replace(/^\S+\s/, ''));
+        if (matchMedia('(max-width:760px)').matches) $('side').classList.add('closed');
+      };
+    });
+  }
+
+  // Əlifba paneli
+  var ABC = [
+    { ad: 'Açar sözlər', cls: 'kw', items: ['əgər', 'yoxsa', 'yoxsa əgər', 'nə qədər ki', 'təkrarla … dəfə', 'hər … içində', 'funksiya', 'qaytar', 'dayan', 'davam', 'sına', 'xəta olsa', 'doğru', 'yalan', 'heç', 'və', 'və ya', 'deyil'] },
+    { ad: 'İşarələr', cls: 'op', items: ['+', '-', '*', '/', '%', '**', '==', '!=', '<', '>', '<=', '>=', '=', '+=', '-=', '( )', '[ ]', '{ }', ':', '.', '"…"', '#'] },
+    { ad: 'Əsas funksiyalar', cls: 'fn', items: ['göstər()', 'daxil_et()', 'gözlə()', 'təmizlə()', 'uzunluq()', 'aralıq()', 'təsadüfi()', 'siyahı()', 'mətn()', 'ədəd()', 'tip()', 'xəta_at()', 'vaxt()'] },
+    { ad: 'Riyaziyyat', cls: 'fn', items: ['kök()', 'qüvvət()', 'mütləq()', 'yuvarlaq()', 'aşağı()', 'yuxarı()', 'tam_böl()', 'cəm()', 'ən_böyük()', 'ən_kiçik()', 'məsafə()'] },
+    { ad: 'Siyahı metodları', cls: 'fn', items: ['.əlavə_et()', '.əvvələ_əlavə_et()', '.sil()', '.çıxar()', '.indeks()', '.var()', '.son()', '.sırala()', '.tərsinə()', '.kopya()', '.birləşdir()', '.uzunluq'] },
+    { ad: 'Mətn metodları', cls: 'fn', items: ['.böyük()', '.kiçik()', '.böl()', '.əvəz_et()', '.təkrar()', '.təmizlə()', '.var()', '.indeks()', '.uzunluq'] },
+    { ad: 'Rəsm qələmi', cls: 'fn', items: ['irəli()', 'geri()', 'sağa()', 'sola()', 'dairə()', 'mərkəzə()', 'rəng()', 'qalınlıq()', 'sürət()', 'qələm_qaldır()', 'qələm_endir()', 'arxa_fon()', 'rəsmə_yaz()'] },
+    { ad: 'Oyun (lövhə 600×600)', cls: 'fn', items: ['kadr()', 'basılıb()', 'basıldı()', 'lövhəni_təmizlə()', 'düzbucaqlı()', 'dairə_çək()', 'üçbucaq()', 'xətt()', 'mətn_yaz()', 'mərkəzdə_yaz()', 'toqquşur()', 'siçan_x()', 'siçan_y()', 'klikləndi()'] },
+    { ad: 'Düymə adları', cls: 'st', items: ['"sol"', '"sağ"', '"yuxarı"', '"aşağı"', '"boşluq"', '"enter"'] },
+    { ad: 'Yazı stilləri', cls: 'st', items: ['"qalın"', '"yarıqalın"', '"adi"', '"incə"', '"maili"', '"xətli"', '"üstüxətli"', '"kod"', '"klassik"'] },
+    { ad: 'Rənglər', cls: 'st', items: ['"qırmızı"', '"narıncı"', '"sarı"', '"yaşıl"', '"göy"', '"mavi"', '"lacivərt"', '"bənövşəyi"', '"çəhrayı"', '"firuzə"', '"qızılı"', '"qəhvəyi"', '"boz"', '"qara"', '"ağ"'] }
+  ];
+  function renderAbcPane() {
+    var total = ABC.reduce(function (s, g) { return s + g.items.length; }, 0);
+    var h = '<div class="sec"><p class="phil"><b style="color:var(--text)">Biz hərfləri qururuq — sözləri və cümlələri siz yazırsınız.</b> Od əlifbasında ' + total + ' hərf var. Hərfə kliklə — redaktora əlavə olunur. ə, ş, ç, ğ, ı, ö, ü olmadan yazmaq da olar.</p></div>';
+    ABC.forEach(function (g) {
+      h += '<div class="sec"><h4>' + g.ad + ' · ' + g.items.length + '</h4><div class="chips">' +
+        g.items.map(function (it) { return '<span class="chip ' + g.cls + '" data-ins="' + esc(it) + '">' + esc(it) + '</span>'; }).join('') + '</div></div>';
+    });
+    $('pane-elifba').innerHTML = h;
+    $('pane-elifba').querySelectorAll('.chip').forEach(function (c) {
+      c.onclick = function () {
+        if (code.readOnly) return;
+        var s = c.getAttribute('data-ins').replace(' … dəfə', ' 3 dəfə:').replace('hər … içində', 'hər x siyahı içində:').replace('"…"', '""');
+        if (/^(əgər|yoxsa|nə qədər ki|funksiya|sına|xəta olsa|yoxsa əgər)$/.test(s)) s += s === 'funksiya' ? ' ad():' : (s === 'yoxsa' || s === 'sına' || s === 'xəta olsa' ? ':' : ' ');
+        code.focus(); insertText(s); toast('Əlavə olundu: ' + s);
+      };
+    });
+  }
+
+  // ---- Çıxış tabları ----
+  function showTab(name) {
+    document.querySelectorAll('.otab').forEach(function (t) { t.classList.toggle('on', t.dataset.tab === name); });
     cons.style.display = name === 'console' ? 'block' : 'none';
     $('canvasBox').style.display = name === 'canvas' ? 'grid' : 'none';
     $('jsView').style.display = name === 'js' ? 'block' : 'none';
     fitCanvas();
   }
-  document.querySelectorAll('.tab').forEach(function(t){ t.addEventListener('click', function(){ showTab(t.dataset.tab); }); });
+  document.querySelectorAll('.otab').forEach(function (t) { t.onclick = function () { showTab(t.dataset.tab); }; });
 
   // ---- Konsol ----
-  function line(text, cls){ var d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; cons.appendChild(d); cons.scrollTop = cons.scrollHeight; return d; }
+  function line(text, cls) { var d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; cons.appendChild(d); cons.scrollTop = cons.scrollHeight; return d; }
   var pendingInput = null;
-  function askInput(msg){
+  function askInput(msg) {
     showTab('console');
-    return new Promise(function(resolve, reject){
+    return new Promise(function (resolve, reject) {
       var row = document.createElement('div'); row.className = 'inrow';
-      var lab = document.createElement('span'); lab.textContent = (msg || '›');
+      var lab = document.createElement('span'); lab.textContent = msg || '›';
       var inp = document.createElement('input'); inp.placeholder = 'Yaz və Enter bas…';
       row.appendChild(lab); row.appendChild(inp); cons.appendChild(row); cons.scrollTop = cons.scrollHeight;
-      setTimeout(function(){ inp.focus(); }, 0);
-      pendingInput = function(){ row.remove(); pendingInput = null; reject(new Od.StopSignal()); };
-      inp.addEventListener('keydown', function(e){
-        if (e.key === 'Enter') {
-          var val = inp.value; row.remove(); pendingInput = null;
-          line((msg ? msg + ' ' : '› ') + val, 'echo');
-          resolve(val);
-        }
+      setTimeout(function () { inp.focus(); }, 0);
+      pendingInput = function () { row.remove(); pendingInput = null; reject(new Od.StopSignal()); };
+      inp.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { var val = inp.value; row.remove(); pendingInput = null; line((msg ? msg + ' ' : '› ') + val, 'echo'); resolve(val); }
       });
     });
   }
 
-  // ---- Tısbağa (qələm) ----
-  var cv = $('cv'), ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
-  var T;
-  function resetTurtle(){
-    T = { x: W/2, y: H/2, a: -90, pen: true, color: '#ff6a2b', w: 3, speed: 6, used: false, bg: '#0b0d11' };
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.fillStyle = T.bg; ctx.fillRect(0,0,W,H);
-    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // ---- Lövhə: qələm ----
+  var cv = $('cv'), cx = cv.getContext('2d'), W = cv.width, H = cv.height, T, stepBudget = 0;
+  function boardBg() { return getComputedStyle(document.documentElement).getPropertyValue('--board').trim() || '#101114'; }
+  function resetTurtle() {
+    T = { x: W / 2, y: H / 2, a: -90, pen: true, color: '#e8692c', w: 3, speed: 6, used: false };
+    cx.setTransform(1, 0, 0, 1, 0, 0); cx.fillStyle = boardBg(); cx.fillRect(0, 0, W, H);
+    cx.lineCap = 'round'; cx.lineJoin = 'round';
   }
-  function frame(){ return new Promise(function(r){ requestAnimationFrame(function(){ r(); }); }); }
-  var stepBudget = 0;
-  async function maybeWait(){
-    if (T.speed >= 10) { if (++stepBudget % 2000 === 0) await frame(); return; }
-    await frame();
-  }
-  function fitCanvas(){
+  function frame() { return new Promise(function (r) { requestAnimationFrame(function () { r(); }); }); }
+  async function maybeWait() { if (T.speed >= 10) { if (++stepBudget % 2000 === 0) await frame(); return; } await frame(); }
+  function fitCanvas() {
     var box = $('canvasBox'); if (box.style.display === 'none') return;
     var sz = Math.max(50, Math.min(box.clientWidth, box.clientHeight) - 8);
     cv.style.width = sz + 'px'; cv.style.height = sz + 'px';
   }
   window.addEventListener('resize', fitCanvas);
-  function useCanvas(){ if (!T.used) { T.used = true; showTab('canvas'); } }
+  function useCanvas() { if (!T.used) { T.used = true; showTab('canvas'); } }
   var turtleAPI = {
-    forward: async function(d){
+    forward: async function (d) {
       useCanvas();
-      var rad = T.a * Math.PI/180, dx = Math.cos(rad), dy = Math.sin(rad);
+      var rad = T.a * Math.PI / 180, dx = Math.cos(rad), dy = Math.sin(rad);
       var stepLen = T.speed >= 10 ? Math.abs(d) || 1 : Math.max(2, T.speed * 3);
-      var steps = Math.max(1, Math.ceil(Math.abs(d) / stepLen));
-      var sgn = d < 0 ? -1 : 1, piece = Math.abs(d)/steps * sgn * 2;
+      var steps = Math.max(1, Math.ceil(Math.abs(d) / stepLen)), piece = Math.abs(d) / steps * (d < 0 ? -1 : 1) * 2;
       for (var i = 0; i < steps; i++) {
-        var nx = T.x + dx*piece, ny = T.y + dy*piece;
-        if (T.pen) { ctx.strokeStyle = T.color; ctx.lineWidth = T.w*2; ctx.beginPath(); ctx.moveTo(T.x, T.y); ctx.lineTo(nx, ny); ctx.stroke(); }
+        var nx = T.x + dx * piece, ny = T.y + dy * piece;
+        if (T.pen) { cx.strokeStyle = T.color; cx.lineWidth = T.w * 2; cx.beginPath(); cx.moveTo(T.x, T.y); cx.lineTo(nx, ny); cx.stroke(); }
         T.x = nx; T.y = ny;
         if (T.speed < 10) await maybeWait();
       }
       if (T.speed >= 10) await maybeWait();
     },
-    turn: async function(a){ useCanvas(); T.a += a; },
-    circle: async function(r){
-      useCanvas();
-      var n = 72, side = 2*Math.PI*r/n;
-      for (var i = 0; i < n; i++) { await turtleAPI.forward(side); T.a += 360/n; }
-    },
-    home: async function(){ useCanvas(); T.x = W/2; T.y = H/2; T.a = -90; },
-    color: function(c){ T.color = c; },
-    pen: function(p){ T.pen = p; },
-    width: function(w){ T.w = Math.max(0.5, w); },
-    speed: function(s){ T.speed = Math.max(1, Math.min(10, s)); },
-    bg: function(c){ useCanvas(); T.bg = c; ctx.fillStyle = c; ctx.fillRect(0,0,W,H); },
-    text: function(s){ useCanvas(); ctx.fillStyle = T.color; ctx.font = '600 '+(14+T.w*6)+'px Manrope, sans-serif'; ctx.fillText(s, T.x, T.y); }
+    turn: async function (a) { useCanvas(); T.a += a; },
+    circle: async function (r) { useCanvas(); var n = 72, side = 2 * Math.PI * r / n; for (var i = 0; i < n; i++) { await turtleAPI.forward(side); T.a += 360 / n; } },
+    home: async function () { useCanvas(); T.x = W / 2; T.y = H / 2; T.a = -90; },
+    color: function (c) { T.color = c; }, pen: function (p) { T.pen = p; },
+    width: function (w) { T.w = Math.max(0.5, w); }, speed: function (s) { T.speed = Math.max(1, Math.min(10, s)); },
+    bg: function (c) { useCanvas(); cx.fillStyle = c; cx.fillRect(0, 0, W, H); },
+    text: function (s) { useCanvas(); cx.fillStyle = T.color; cx.font = '600 ' + (14 + T.w * 6) + 'px Inter, sans-serif'; cx.fillText(s, T.x, T.y); }
   };
 
-  // ---- Oyun (lövhə 600 × 600) ----
+  // ---- Lövhə: oyun (600 × 600) ----
   var S = 2, KEYS = {}, PRESSED = {}, CUR_PRESSED = {}, MOUSE = { x: 0, y: 0, clicked: false }, CLICKQ = false, gameActive = false;
   var KEYMAP = { ArrowLeft: 'sol', ArrowRight: 'sag', ArrowUp: 'yuxari', ArrowDown: 'asagi', ' ': 'bosluq', Enter: 'enter', Escape: 'esc', Shift: 'shift' };
-  function keyName(e){ return KEYMAP[e.key] || Od.fold(e.key); }
-  window.addEventListener('keydown', function(e){
+  function keyName(e) { return KEYMAP[e.key] || Od.fold(e.key); }
+  window.addEventListener('keydown', function (e) {
     if (!gameActive) return;
     var tg = e.target && e.target.tagName;
     if (tg === 'TEXTAREA' || tg === 'INPUT' || tg === 'SELECT') return;
-    var k = keyName(e);
-    if (!KEYS[k]) PRESSED[k] = true;
-    KEYS[k] = true;
+    var k = keyName(e); if (!KEYS[k]) PRESSED[k] = true; KEYS[k] = true;
     if (KEYMAP[e.key]) e.preventDefault();
   });
-  window.addEventListener('keyup', function(e){ KEYS[keyName(e)] = false; });
-  window.addEventListener('blur', function(){ KEYS = {}; });
-  function toBoard(e){ var r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * 600, y: (e.clientY - r.top) / r.height * 600 }; }
-  cv.addEventListener('pointermove', function(e){ var p = toBoard(e); MOUSE.x = p.x; MOUSE.y = p.y; });
-  cv.addEventListener('pointerdown', function(e){ var p = toBoard(e); MOUSE.x = p.x; MOUSE.y = p.y; CLICKQ = true; $('canvasBox').focus(); });
-  document.querySelectorAll('#pad button').forEach(function(b){
+  window.addEventListener('keyup', function (e) { KEYS[keyName(e)] = false; });
+  window.addEventListener('blur', function () { KEYS = {}; });
+  function toBoard(e) { var r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * 600, y: (e.clientY - r.top) / r.height * 600 }; }
+  cv.addEventListener('pointermove', function (e) { var p = toBoard(e); MOUSE.x = p.x; MOUSE.y = p.y; });
+  cv.addEventListener('pointerdown', function (e) { var p = toBoard(e); MOUSE.x = p.x; MOUSE.y = p.y; CLICKQ = true; $('canvasBox').focus(); });
+  document.querySelectorAll('#pad button').forEach(function (b) {
     var k = b.dataset.k;
-    b.addEventListener('pointerdown', function(e){ e.preventDefault(); if (!KEYS[k]) PRESSED[k] = true; KEYS[k] = true; });
-    ['pointerup','pointerleave','pointercancel'].forEach(function(ev){ b.addEventListener(ev, function(){ KEYS[k] = false; }); });
+    b.addEventListener('pointerdown', function (e) { e.preventDefault(); if (!KEYS[k]) PRESSED[k] = true; KEYS[k] = true; });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { b.addEventListener(ev, function () { KEYS[k] = false; }); });
   });
-  function startGame(){
+  function startGame() {
     if (gameActive) return;
-    gameActive = true; useCanvas(); showTab('canvas');
-    code.blur(); $('canvasBox').focus();
+    gameActive = true; useCanvas(); showTab('canvas'); code.blur(); $('canvasBox').focus();
     if (window.matchMedia && matchMedia('(pointer: coarse)').matches) $('pad').style.display = 'flex';
-    $('status').textContent = '🎮 Oyun gedir — ox düymələri, boşluq';
+    status('Oyun gedir — ox düymələri, boşluq');
   }
-  function stopGame(){ gameActive = false; KEYS = {}; PRESSED = {}; CUR_PRESSED = {}; $('pad').style.display = 'none'; }
+  function stopGame() { gameActive = false; KEYS = {}; PRESSED = {}; CUR_PRESSED = {}; $('pad').style.display = 'none'; }
   var gameAPI = {
-    frame: function(t){
+    frame: function (t) {
       startGame();
-      return new Promise(function(res, rej){
-        requestAnimationFrame(function(){
-          CUR_PRESSED = PRESSED; PRESSED = {};
-          MOUSE.clicked = CLICKQ; CLICKQ = false;
+      return new Promise(function (res, rej) {
+        requestAnimationFrame(function () {
+          CUR_PRESSED = PRESSED; PRESSED = {}; MOUSE.clicked = CLICKQ; CLICKQ = false;
           t.stopped ? rej(new Od.StopSignal()) : res();
         });
       });
     },
-    down: function(k){ return !!KEYS[k]; },
-    pressed: function(k){ return !!CUR_PRESSED[k]; },
-    mouse: function(){ return MOUSE; },
-    clear: function(c){ useCanvas(); ctx.fillStyle = c; ctx.fillRect(0, 0, W, H); },
-    rect: function(x, y, w, h, c){ useCanvas(); ctx.fillStyle = c; ctx.fillRect(x*S, y*S, w*S, h*S); },
-    circle: function(x, y, r, c){ useCanvas(); ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x*S, y*S, Math.max(0, r)*S, 0, Math.PI*2); ctx.fill(); },
-    tri: function(x1, y1, x2, y2, x3, y3, c){ useCanvas(); ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(x1*S, y1*S); ctx.lineTo(x2*S, y2*S); ctx.lineTo(x3*S, y3*S); ctx.closePath(); ctx.fill(); },
-    line: function(x1, y1, x2, y2, c, w){ useCanvas(); ctx.strokeStyle = c; ctx.lineWidth = w*S; ctx.beginPath(); ctx.moveTo(x1*S, y1*S); ctx.lineTo(x2*S, y2*S); ctx.stroke(); },
-    text: function(m, x, y, size, c, center, st){
-      useCanvas();
-      st = st || { weight: 800, family: 'sans' };
-      var fam = st.family === 'mono' ? "'JetBrains Mono', monospace" : st.family === 'serif' ? "Lora, Georgia, serif" : "Manrope, system-ui, sans-serif";
+    down: function (k) { return !!KEYS[k]; }, pressed: function (k) { return !!CUR_PRESSED[k]; }, mouse: function () { return MOUSE; },
+    clear: function (c) { useCanvas(); cx.fillStyle = c; cx.fillRect(0, 0, W, H); },
+    rect: function (x, y, w, h, c) { useCanvas(); cx.fillStyle = c; cx.fillRect(x * S, y * S, w * S, h * S); },
+    circle: function (x, y, r, c) { useCanvas(); cx.fillStyle = c; cx.beginPath(); cx.arc(x * S, y * S, Math.max(0, r) * S, 0, Math.PI * 2); cx.fill(); },
+    tri: function (x1, y1, x2, y2, x3, y3, c) { useCanvas(); cx.fillStyle = c; cx.beginPath(); cx.moveTo(x1 * S, y1 * S); cx.lineTo(x2 * S, y2 * S); cx.lineTo(x3 * S, y3 * S); cx.closePath(); cx.fill(); },
+    line: function (x1, y1, x2, y2, c, w) { useCanvas(); cx.strokeStyle = c; cx.lineWidth = w * S; cx.beginPath(); cx.moveTo(x1 * S, y1 * S); cx.lineTo(x2 * S, y2 * S); cx.stroke(); },
+    text: function (m, x, y, size, c, center, st) {
+      useCanvas(); st = st || { weight: 800, family: 'sans' };
+      var fam = st.family === 'mono' ? "'JetBrains Mono', monospace" : st.family === 'serif' ? 'Lora, Georgia, serif' : 'Inter, system-ui, sans-serif';
       var px = size * S;
-      ctx.fillStyle = c; ctx.strokeStyle = c;
-      ctx.font = (st.italic ? 'italic ' : '') + st.weight + ' ' + px + 'px ' + fam;
-      ctx.textBaseline = 'top'; ctx.textAlign = center ? 'center' : 'left';
-      ctx.fillText(m, x*S, y*S);
+      cx.fillStyle = c; cx.strokeStyle = c;
+      cx.font = (st.italic ? 'italic ' : '') + st.weight + ' ' + px + 'px ' + fam;
+      cx.textBaseline = 'top'; cx.textAlign = center ? 'center' : 'left';
+      cx.fillText(m, x * S, y * S);
       if (st.underline || st.strike) {
-        var w = ctx.measureText(m).width, x0 = center ? x*S - w/2 : x*S;
-        ctx.lineWidth = Math.max(2, px/14);
-        [st.underline ? y*S + px*1.08 : null, st.strike ? y*S + px*0.58 : null].forEach(function(ly){
-          if (ly == null) return; ctx.beginPath(); ctx.moveTo(x0, ly); ctx.lineTo(x0 + w, ly); ctx.stroke();
+        var w = cx.measureText(m).width, x0 = center ? x * S - w / 2 : x * S;
+        cx.lineWidth = Math.max(2, px / 14);
+        [st.underline ? y * S + px * 1.08 : null, st.strike ? y * S + px * 0.58 : null].forEach(function (ly) {
+          if (ly == null) return; cx.beginPath(); cx.moveTo(x0, ly); cx.lineTo(x0 + w, ly); cx.stroke();
         });
       }
-      ctx.textAlign = 'left';
+      cx.textAlign = 'left';
     }
   };
 
   // ---- İşə salma ----
-  var t0, RUNS = 0;
-  async function runProgram(srcOverride){
+  var RUNS = 0;
+  function status(t) { $('sbStatus').textContent = t; }
+  async function runProgram(srcOverride) {
     var src = typeof srcOverride === 'string' ? srcOverride : code.value;
     if (current) { current.stop(); if (pendingInput) pendingInput(); }
     cons.innerHTML = ''; errLine = null; highlight();
-    stopGame(); resetTurtle(); stepBudget = 0;
-    showTab('console');
-    $('stopBtn').disabled = false; $('status').textContent = '⏳ İşləyir…';
-    t0 = performance.now();
-    var myRun = ++RUNS;
-    function alive(){ if (myRun !== RUNS) throw new Od.StopSignal(); }
-    var io = {
-      print: function(s){ alive(); line(s); },
-      clear: function(){ alive(); cons.innerHTML = ''; },
-      input: function(m){ alive(); return askInput(m); },
-      turtle: turtleAPI,
-      game: gameAPI
-    };
+    stopGame(); resetTurtle(); stepBudget = 0; showTab('console');
+    $('stopBtn').disabled = false; status('İşləyir…');
+    var t0 = performance.now(), myRun = ++RUNS;
+    function alive() { if (myRun !== RUNS) throw new Od.StopSignal(); }
+    var io = { print: function (s) { alive(); line(s); }, clear: function () { alive(); cons.innerHTML = ''; }, input: function (m) { alive(); return askInput(m); }, turtle: turtleAPI, game: gameAPI };
     var r = Od.run(src, io);
     current = r;
     $('jsView').textContent = r.js ? '// Od kodundan yaradılmış JavaScript\n\n' + r.js : '// Kodda xəta olduğu üçün JavaScript yaradılmadı.';
     var res = await r.promise;
     if (current !== r) return;
-    current = null; stopGame();
-    $('stopBtn').disabled = true;
+    current = null; stopGame(); $('stopBtn').disabled = true;
     var ms = Math.round(performance.now() - t0);
     if (res.ok) {
-      $('status').textContent = '✅ Hazırdır · ' + ms + ' ms';
+      status('Hazırdır · ' + ms + ' ms');
       if (!cons.children.length && !T.used) line('(Proqram işlədi, amma heç nə göstərmədi. göstər(...) istifadə et.)', 'sys');
-    } else if (res.stopped) {
-      line('■ Proqram dayandırıldı.', 'sys'); $('status').textContent = '■ Dayandırıldı';
-    } else {
+    } else if (res.stopped) { line('Proqram dayandırıldı.', 'sys'); status('Dayandırıldı'); }
+    else {
       showTab('console');
       var d = document.createElement('div'); d.className = 'err';
-      d.innerHTML = '<b>' + (res.kind === 'syntax' ? '✍️ Yazı xətası' : '⚠️ Xəta') + (res.line ? ' — sətir ' + res.line : '') + ':</b> ' + esc(res.error);
-      cons.appendChild(d);
-      $('status').textContent = '❌ Xəta';
-      if (res.line) { errLine = res.line; highlight(); scrollToLine(res.line); }
+      d.innerHTML = '<b>' + (res.kind === 'syntax' ? 'Yazı xətası' : 'Xəta') + (res.line ? ' — sətir ' + res.line : '') + ':</b> ' + esc(res.error);
+      cons.appendChild(d); status('Xəta' + (res.line ? ' · sətir ' + res.line : ''));
+      if (res.line && typeof srcOverride !== 'string') { errLine = res.line; highlight(); scrollToLine(res.line); }
     }
   }
-  function scrollToLine(n){
-    var lh = parseFloat(getComputedStyle(code).lineHeight) || 23;
-    var top = (n-1)*lh;
-    if (top < code.scrollTop || top > code.scrollTop + code.clientHeight - lh*2) code.scrollTop = Math.max(0, top - code.clientHeight/3);
+  function scrollToLine(n) {
+    var lh = parseFloat(getComputedStyle(code).lineHeight) || 23, top = (n - 1) * lh;
+    if (top < code.scrollTop || top > code.scrollTop + code.clientHeight - lh * 2) code.scrollTop = Math.max(0, top - code.clientHeight / 3);
     syncScroll();
   }
-  $('runBtn').addEventListener('click', runProgram);
-  $('stopBtn').addEventListener('click', function(){ if (current) { current.stop(); if (pendingInput) pendingInput(); } });
-  $('copyBtn').addEventListener('click', function(){
-    try {
-      navigator.clipboard.writeText(code.value).then(function(){ toast('Kod kopyalandı ✓'); }, function(){ fallbackCopy(); });
-    } catch(e){ fallbackCopy(); }
+  $('runBtn').addEventListener('click', function () { runProgram(); });
+  $('stopBtn').addEventListener('click', function () { if (current) { current.stop(); if (pendingInput) pendingInput(); } });
+  $('copyBtn').addEventListener('click', function () {
+    try { navigator.clipboard.writeText(code.value).then(function () { toast('Kod kopyalandı'); }, fallbackCopy); } catch (e) { fallbackCopy(); }
   });
-  function fallbackCopy(){ code.focus(); code.select(); toast('Kod seçildi — Ctrl+C bas'); }
-  function toast(t){ var el = $('toast'); el.textContent = t; el.classList.add('on'); setTimeout(function(){ el.classList.remove('on'); }, 1600); }
+  function fallbackCopy() { code.focus(); code.select(); toast('Kod seçildi — Ctrl+C bas'); }
+  var toastT;
+  function toast(t) { var el = $('toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove('on'); }, 1800); }
 
-  // ---- Od əlifbası: dilin bütün "hərfləri" bir yerdə ----
-  var ABC = [
-    { ad: 'Açar sözlər', izah: 'dilin əsas hərfləri', cls: 'kw', items: [
-      ['əgər', 'şərt'], ['yoxsa', 'əks halda'], ['yoxsa əgər', 'başqa şərt'], ['nə qədər ki', 'şərt doğru olduqca'],
-      ['təkrarla … dəfə', 'N dəfə'], ['hər … içində', 'hər element üçün'], ['funksiya', 'yeni söz yarat'], ['qaytar', 'nəticə ver'],
-      ['dayan', 'dövrü bitir'], ['davam', 'növbətiyə keç'], ['sına', 'xətanı yoxla'], ['xəta olsa', 'xətanı tut'],
-      ['doğru', 'true'], ['yalan', 'false'], ['heç', 'boş dəyər'], ['və', 'hər ikisi'], ['və ya', 'biri'], ['deyil', 'əksi']
-    ]},
-    { ad: 'İşarələr', izah: 'riyaziyyat və quruluş', cls: 'op', items: [
-      ['+', 'topla'], ['-', 'çıx'], ['*', 'vur'], ['/', 'böl'], ['%', 'qalıq'], ['**', 'qüvvət'],
-      ['==', 'bərabərdir'], ['!=', 'fərqlidir'], ['<  >', 'kiçik / böyük'], ['<=  >=', 'kiçik-bərabər / böyük-bərabər'],
-      ['=', 'dəyər ver'], ['+=  -=  *=  /=', 'artır / azalt'], ['( )', 'çağırış, qruplaşdırma'], ['[ ]', 'siyahı'],
-      ['{ }', 'obyekt'], [':', 'blok başlayır'], ['.', 'metod / xassə'], ['"…"', 'mətn'], ['#', 'şərh']
-    ]},
-    { ad: 'Əsas funksiyalar', izah: 'hazır sözlər', cls: 'fn', items: [
-      ['göstər()', 'ekrana yaz'], ['daxil_et()', 'cavab al'], ['gözlə()', 'saniyə gözlə'], ['təmizlə()', 'konsolu sil'],
-      ['uzunluq()', 'neçə element'], ['aralıq()', 'ədəd siyahısı'], ['təsadüfi()', 'təsadüfi ədəd'], ['siyahı()', 'siyahı yarat'],
-      ['mətn()', 'mətnə çevir'], ['ədəd()', 'ədədə çevir'], ['tip()', 'növü nədir'], ['xəta_at()', 'xəta yarat'], ['vaxt()', 'indiki vaxt (ms)']
-    ]},
-    { ad: 'Riyaziyyat', izah: '', cls: 'fn', items: [
-      ['kök()', 'kvadrat kök'], ['qüvvət()', 'a üstü b'], ['mütləq()', 'mütləq qiymət'], ['yuvarlaq()', 'yuvarlaqlaşdır'],
-      ['aşağı()', 'aşağı yuvarlaq'], ['yuxarı()', 'yuxarı yuvarlaq'], ['tam_böl()', 'tam bölmə'], ['cəm()', 'cəm'],
-      ['ən_böyük()', 'maksimum'], ['ən_kiçik()', 'minimum'], ['məsafə()', 'iki nöqtə arası']
-    ]},
-    { ad: 'Siyahı metodları', izah: 'siyahı.metod()', cls: 'fn', items: [
-      ['.əlavə_et()', 'sona əlavə'], ['.əvvələ_əlavə_et()', 'əvvələ əlavə'], ['.sil()', 'indeksə görə sil'], ['.çıxar()', 'dəyərə görə sil'],
-      ['.indeks()', 'harada?'], ['.var()', 'varmı?'], ['.son()', 'sonuncu'], ['.sırala()', 'sırala'], ['.tərsinə()', 'tərsinə çevir'],
-      ['.kopya()', 'surət çıxar'], ['.birləşdir()', 'mətnə çevir'], ['.uzunluq', 'neçə dənə']
-    ]},
-    { ad: 'Mətn metodları', izah: 'mətn.metod()', cls: 'fn', items: [
-      ['.böyük()', 'BÖYÜK HƏRF'], ['.kiçik()', 'kiçik hərf'], ['.böl()', 'hissələrə böl'], ['.əvəz_et()', 'əvəz et'],
-      ['.təkrar()', 'N dəfə təkrar'], ['.təmizlə()', 'boşluqları sil'], ['.var()', 'içində varmı?'], ['.indeks()', 'harada?'], ['.uzunluq', 'hərf sayı']
-    ]},
-    { ad: 'Rəsm qələmi', izah: '', cls: 'fn', items: [
-      ['irəli()', 'irəli get'], ['geri()', 'geri get'], ['sağa()', 'sağa dön'], ['sola()', 'sola dön'], ['dairə()', 'dairə çək'],
-      ['mərkəzə()', 'mərkəzə qayıt'], ['rəng()', 'qələm rəngi'], ['qalınlıq()', 'xətt qalınlığı'], ['sürət()', '1-10'],
-      ['qələm_qaldır()', 'iz qoyma'], ['qələm_endir()', 'iz qoy'], ['arxa_fon()', 'fon rəngi'], ['rəsmə_yaz()', 'yazı yaz']
-    ]},
-    { ad: 'Oyun', izah: 'lövhə 600 × 600', cls: 'fn', items: [
-      ['kadr()', 'növbəti kadr'], ['basılıb()', 'düymə basılıdır?'], ['basıldı()', 'indicə basıldı?'], ['lövhəni_təmizlə()', 'lövhəni sil'],
-      ['düzbucaqlı()', 'düzbucaqlı'], ['dairə_çək()', 'dairə'], ['üçbucaq()', 'üçbucaq'], ['xətt()', 'xətt'],
-      ['mətn_yaz()', 'yazı'], ['mərkəzdə_yaz()', 'ortada yazı'], ['toqquşur()', 'toxunurmu?'],
-      ['siçan_x()', 'siçan X'], ['siçan_y()', 'siçan Y'], ['klikləndi()', 'klik oldu?']
-    ]},
-    { ad: 'Düymə adları', izah: 'basılıb("…") üçün', cls: 'st', items: [
-      ['"sol"', '←'], ['"sağ"', '→'], ['"yuxarı"', '↑'], ['"aşağı"', '↓'], ['"boşluq"', 'space'], ['"enter"', '↵'], ['"a" … "z"', 'hərflər']
-    ]},
-    { ad: 'Yazı stilləri', izah: 'mətn_yaz(…, "stil")', cls: 'st', items: [
-      ['"qalın"', ''], ['"yarıqalın"', ''], ['"adi"', ''], ['"incə"', ''], ['"maili"', 'italik'], ['"xətli"', 'altından xətt'],
-      ['"üstüxətli"', 'üstündən xətt'], ['"kod"', 'kod şrifti'], ['"klassik"', 'kitab şrifti']
-    ]},
-    { ad: 'Rənglər', izah: 'və ya "#ff6a2b" kimi kod', cls: 'st', items: [
-      ['"qırmızı"', ''], ['"narıncı"', ''], ['"sarı"', ''], ['"yaşıl"', ''], ['"göy"', ''], ['"mavi"', ''], ['"lacivərt"', ''],
-      ['"bənövşəyi"', ''], ['"çəhrayı"', ''], ['"firuzə"', ''], ['"qızılı"', ''], ['"qəhvəyi"', ''], ['"boz"', ''], ['"qara"', ''], ['"ağ"', '']
-    ]}
-  ];
-  var COLOR_HEX = Od.COLORS;
-  function renderABC(){
-    var total = ABC.reduce(function(s, g){ return s + g.items.length; }, 0);
-    var h = '<button class="abc-close" id="abcClose">✕ Bağla</button>';
-    h += '<h2>🔤 Od əlifbası</h2>';
-    h += '<p class="phil">Hər dil hərflərdən başlayır. Azərbaycan əlifbasındakı 32 hərflə bütün ədəbiyyat yazılıb. ' +
-         'Od-da da belədir: <b>biz yalnız hərfləri və qrammatikanı qururuq</b>. Sözləri (funksiyaları), cümlələri (proqramları) ' +
-         'və kitabları (kitabxanaları) isə <b>siz yazırsınız</b>.</p>';
-    h += '<div class="ladder"><span class="us">🔤 Hərflər — biz</span><i>→</i><span class="us">📐 Qrammatika — biz</span><i>→</i>' +
-         '<span>📝 Sözlər (funksiyalar) — siz</span><i>→</i><span>💬 Cümlələr (proqramlar) — siz</span><i>→</i><span>📚 Kitablar (kitabxanalar) — icma</span></div>';
-    h += '<span class="total">Bu gün əlifbada <b>' + total + '</b> hərf var · ə, ş, ç, ğ, ı, ö, ü olmadan yazmaq da olar · hərfə klikləsən, redaktora əlavə olunur</span>';
-    ABC.forEach(function(g){
-      h += '<div class="abc-sec"><h3>' + g.ad + ' <em>' + g.items.length + (g.izah ? ' · ' + esc(g.izah) : '') + '</em></h3><div class="chips">';
-      g.items.forEach(function(it){
-        var sw = '';
-        if (g.ad === 'Rənglər') { var hx = COLOR_HEX[Od.fold(it[0].replace(/"/g, ''))]; if (hx) sw = '<span style="display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:' + hx + '"></span>'; }
-        h += '<span class="chip ' + g.cls + '" data-ins="' + esc(it[0]).replace(/"/g, '&quot;') + '">' + sw + esc(it[0]) + (it[1] ? '<small>' + esc(it[1]) + '</small>' : '') + '</span>';
-      });
-      h += '</div></div>';
-    });
-    $('abcIn').innerHTML = h;
-    $('abcClose').onclick = closeABC;
-    document.querySelectorAll('#abcIn .chip').forEach(function(c){
-      c.addEventListener('click', function(){
-        var s = c.getAttribute('data-ins').replace(/ … .*$/, '').replace(/ … /, ' ').replace(/\s+(\S)/g, ' $1');
-        if (/^[.]/.test(s) || /\(\)$/.test(s) || /^"/.test(s) || /^[a-zəöüşçğı ]+$/i.test(s)) {
-          closeABC(); code.focus(); insertText(s); highlight(); save();
-          toast('Əlavə olundu: ' + s);
-        }
-      });
-    });
+  // ---- Modal ----
+  function openModal(html, wide) {
+    var box = $('modalBox'); box.className = 'box' + (wide ? ' wide' : ''); box.innerHTML = html;
+    applyIcons(box); $('modal').classList.add('on');
+    var f = box.querySelector('input,textarea,select'); if (f) setTimeout(function () { f.focus(); }, 30);
+    return box;
   }
-  function openABC(){ renderABC(); $('abc').classList.add('on'); try { localStorage.setItem('od-abc-seen', '1'); } catch(e){} }
-  function closeABC(){ $('abc').classList.remove('on'); }
-  $('mottoBtn').addEventListener('click', openABC);
-  $('abc').addEventListener('click', function(e){ if (e.target.id === 'abc') closeABC(); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeABC(); });
+  function closeModal() { $('modal').classList.remove('on'); }
+  $('modal').addEventListener('mousedown', function (e) { if (e.target.id === 'modal') closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); $('cert').classList.remove('on'); $('bellPop').classList.remove('on'); } });
 
   // ---- Od Dərslik ----
   var LKEY = 'od-ders-v1';
-  var LS = { passed: {}, code: {}, cur: 0, fails: {} };
-  try { var saved = JSON.parse(localStorage.getItem(LKEY) || 'null'); if (saved) LS = Object.assign(LS, saved); } catch(e){}
-  function lsave(){ try { localStorage.setItem(LKEY, JSON.stringify(LS)); } catch(e){} }
-  var lessonsMode = false, freeCode = null, checking = false;
-  function passedCount(){ return OD_LESSONS.filter(function(l){ return LS.passed[l.id]; }).length; }
-
-  function setEditor(txt){ code.value = txt; errLine = null; highlight(); }
-  function enterLessons(i){
-    if (!lessonsMode) { freeCode = code.value; }
-    lessonsMode = true; document.body.classList.add('lessons'); $('lessonsBtn').classList.add('on'); $('lessonsBtn').textContent = '🧪 Sərbəst rejim';
-    openLesson(i == null ? LS.cur : i);
-  }
-  function exitLessons(){
-    storeLessonCode();
-    lessonsMode = false; document.body.classList.remove('lessons'); $('lessonsBtn').classList.remove('on'); $('lessonsBtn').textContent = '📘 Dərslər';
-    setEditor(load() || freeCode || OD_EXAMPLES[0].kod);
-    try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
-  }
-  function storeLessonCode(){ if (lessonsMode) { LS.code[OD_LESSONS[LS.cur].id] = code.value; lsave(); } }
-  function openLesson(i){
+  var LS = Object.assign({ passed: {}, code: {}, cur: 0, fails: {} }, fetchStore(LKEY, true) || {});
+  function lsave() { store(LKEY, LS); }
+  var checking = false;
+  function passedCount() { return OD_LESSONS.filter(function (l) { return LS.passed[l.id]; }).length; }
+  function enterLessons(i) { openLesson(i == null ? LS.cur : i); }
+  function openLesson(i) {
     i = Math.max(0, Math.min(OD_LESSONS.length - 1, i));
-    if (lessonsMode && OD_LESSONS[LS.cur] && LS.cur !== i) storeLessonCode();
     LS.cur = i; lsave();
     var L = OD_LESSONS[i];
-    setEditor(LS.code[L.id] != null ? LS.code[L.id] : L.başlanğıc);
+    setContext({ type: 'lesson', title: 'Dərs ' + (i + 1) + ' — ' + L.ad, crumb: 'Dərslik › ' + L.ad, mode: 'Dərs ' + (i + 1) + '/' + OD_LESSONS.length, icon: 'book',
+      save: function (v) { LS.code[L.id] = v; lsave(); },
+      tools: [{ label: 'Yoxla', icon: 'check', cls: 'ok', onClick: checkCurrent }] },
+      LS.code[L.id] != null ? LS.code[L.id] : L.başlanğıc);
     renderLesson(null);
-    try { history.replaceState(null, '', '#ders-' + (i + 1)); } catch(e){}
+    try { history.replaceState(null, '', '#ders-' + (i + 1)); } catch (e) {}
   }
-  function renderLesson(result){
-    var L = OD_LESSONS[LS.cur], i = LS.cur, done = !!LS.passed[L.id];
-    var h = '<div class="lhead"><span class="lnum">Dərs ' + (i + 1) + ' / ' + OD_LESSONS.length + '</span><h2>' + esc(L.ad) + (done ? ' ✅' : '') + '</h2><span class="ltopic">' + esc(L.mövzu) + '</span></div>';
-    h += '<div class="dots">' + OD_LESSONS.map(function(x, k){ return '<button data-l="' + k + '" class="' + (LS.passed[x.id] ? 'done ' : '') + (k === i ? 'cur' : '') + '" title="' + esc(x.ad) + '">' + (k + 1) + '</button>'; }).join('') + '</div>';
+  function renderLesson(result) {
+    var L = OD_LESSONS[LS.cur], i = LS.cur, done = !!LS.passed[L.id], pc = passedCount();
+    var h = '<div class="lhead"><span class="lnum">Dərs ' + (i + 1) + ' / ' + OD_LESSONS.length + ' · ' + esc(L.mövzu) + '</span><h2>' + esc(L.ad) + (done ? ' <span class="pill ok">' + icon('check') + 'Keçildi</span>' : '') + '</h2></div>';
+    h += '<div class="prog"><i style="width:' + Math.round(pc / OD_LESSONS.length * 100) + '%"></i></div><div class="muted" style="font-size:12px">' + pc + ' / ' + OD_LESSONS.length + ' dərs tamamlandı</div>';
+    h += '<div class="dots">' + OD_LESSONS.map(function (x, k) { return '<button data-l="' + k + '" class="' + (LS.passed[x.id] ? 'done ' : '') + (k === i ? 'cur' : '') + '" title="' + esc(x.ad) + '">' + (k + 1) + '</button>'; }).join('') + '</div>';
     h += L.izah;
-    h += '<div class="lex"><pre>' + esc(L.nümunə) + '</pre><button id="lexRun">▶ Nümunəni sına</button></div>';
-    h += '<div class="ltask"><b class="t">🎯 Tapşırıq</b><p>' + L.tapşırıq + '</p></div>';
-    h += '<div class="lbtns"><button class="check" id="lCheck">✔ Yoxla</button><button id="lHint">💡 İpucu</button>';
-    if ((LS.fails[L.id] || 0) >= 3 && !done) h += '<button id="lAns">👀 Cavabı göstər</button>';
-    h += '<button id="lReset">↺ Sıfırla</button>';
-    if (i < OD_LESSONS.length - 1) h += '<button class="next" id="lNext"' + (done ? '' : ' style="opacity:.55"') + '>Növbəti dərs →</button>';
-    else if (passedCount() === OD_LESSONS.length) h += '<button class="next" id="lCert">🏆 Sertifikat</button>';
+    h += '<div class="lex"><pre>' + highlightCode(L.nümunə) + '</pre><button class="btn sm" id="lexRun">' + icon('play') + 'Sına</button></div>';
+    h += '<div class="task"><b class="t">Tapşırıq</b><p>' + L.tapşırıq + '</p></div>';
+    h += '<div class="lbtns"><button class="btn ok" id="lCheck">' + icon('check') + 'Yoxla</button><button class="btn" id="lHint">İpucu</button>';
+    if ((LS.fails[L.id] || 0) >= 3 && !done) h += '<button class="btn" id="lAns">Cavabı göstər</button>';
+    h += '<button class="btn ghost" id="lReset">Sıfırla</button><div class="spacer"></div>';
+    if (i < OD_LESSONS.length - 1) h += '<button class="btn primary" id="lNext"' + (done ? '' : ' disabled title="Əvvəlcə tapşırığı həll et"') + '>Növbəti →</button>';
+    else if (pc === OD_LESSONS.length) h += '<button class="btn primary" id="lCert">Sertifikat</button>';
     h += '</div><div id="lhintBox"></div><div class="lres" id="lres"></div>';
-    $('lbody').innerHTML = h; $('lbody').scrollTop = 0;
-    document.querySelectorAll('.dots button').forEach(function(b){ b.onclick = function(){ openLesson(+b.dataset.l); }; });
-    $('lexRun').onclick = function(){ runProgram(L.nümunə); toast('Nümunə işə salındı — nəticə konsolda'); };
+    $('lbody').innerHTML = h;
+    $('lbody').querySelectorAll('.dots button').forEach(function (b) { b.onclick = function () { openLesson(+b.dataset.l); }; });
+    $('lexRun').onclick = function () { runProgram(L.nümunə); toast('Nümunə işə salındı — nəticə konsolda'); };
     $('lCheck').onclick = checkCurrent;
-    $('lHint').onclick = function(){ $('lhintBox').innerHTML = '<div class="lhint">💡 ' + esc(L.ipucu) + '</div>'; };
-    $('lReset').onclick = function(){ setEditor(L.başlanğıc); storeLessonCode(); toast('Başlanğıc koduna qayıtdı'); };
-    if ($('lAns')) $('lAns').onclick = function(){ setEditor(L.cavab); storeLessonCode(); toast('Cavab redaktorda — oxu və başa düş, sonra Yoxla bas'); };
-    if ($('lNext')) $('lNext').onclick = function(){ if (!done) { toast('Əvvəlcə bu tapşırığı həll et 🙂'); return; } openLesson(i + 1); };
+    $('lHint').onclick = function () { $('lhintBox').innerHTML = '<div class="hint">' + esc(L.ipucu) + '</div>'; };
+    $('lReset').onclick = function () { code.value = L.başlanğıc; code.dispatchEvent(new Event('input')); toast('Başlanğıc koduna qayıtdı'); };
+    if ($('lAns')) $('lAns').onclick = function () { code.value = L.cavab; code.dispatchEvent(new Event('input')); toast('Cavab redaktorda — oxu, başa düş, sonra Yoxla'); };
+    if ($('lNext')) $('lNext').onclick = function () { openLesson(i + 1); };
     if ($('lCert')) $('lCert').onclick = openCert;
-    if (result) showResult(result);
+    if (result) showResults($('lres'), result);
   }
-  function showResult(r){
-    var L = OD_LESSONS[LS.cur], h = '';
-    h += '<div class="big ' + (r.ok ? 'ok' : 'bad') + '">' + (r.ok ? '🎉 Əla! Tapşırıq həll olundu.' : '❌ Hələ düz deyil — yenidən cəhd et.') + '</div>';
-    if (r.mesaj) h += '<div class="tr bad">⚠️ ' + esc(r.mesaj) + '</div>';
-    r.results.forEach(function(t){
-      h += '<div class="tr ' + (t.ok ? 'ok' : 'bad') + '"><div>' + (t.ok ? '✅' : '❌') + '</div><div><b>Test ' + t.nömrə + '</b>' +
-        (t.girdi ? ' <small>· girdi: ' + esc(t.girdi.join(', ')) + '</small>' : '') +
-        (t.xəta ? '<pre>⚠️ ' + esc(t.xəta) + '</pre>' :
-          (t.ok ? '' : '<pre>Gözlənilən: ' + esc(t.gözlənilən) + '\nSənin nəticən: ' + esc(t.alınan || '(heç nə)') + '</pre>')) + '</div></div>';
+  function showResults(el, r) {
+    var h = '<div class="big ' + (r.ok ? 'ok' : 'bad') + '">' + (r.ok ? 'Əla! Bütün testlər keçdi.' : 'Hələ düz deyil — yenidən cəhd et.') + '</div>';
+    if (r.mesaj) h += '<div class="tr warn">' + esc(r.mesaj) + '</div>';
+    r.results.forEach(function (t) {
+      h += '<div class="tr ' + (t.ok ? 'ok' : 'bad') + '"><div><b>Test ' + t.nömrə + '</b>' +
+        (t.girdi && t.girdi.length ? ' <small>· girdi: ' + esc(t.girdi.join(', ')) + '</small>' : '') +
+        (t.xəta ? '<pre>' + esc(t.xəta) + '</pre>' : (t.ok ? ' <small>· keçdi</small>' : '<pre>Gözlənilən: ' + esc(t.gözlənilən) + '\nSənin nəticən: ' + esc(t.alınan || '(heç nə)') + '</pre>')) + '</div></div>';
     });
-    $('lres').innerHTML = h;
-    $('lres').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    el.innerHTML = h;
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
-  function checkCurrent(){
-    if (checking) return; checking = true;
-    var L = OD_LESSONS[LS.cur]; storeLessonCode();
-    $('lres').innerHTML = '<div class="big">⏳ Yoxlanılır…</div>';
-    odCheckLesson(L, code.value).then(function(r){
+  function checkCurrent() {
+    if (checking || !ctx || ctx.type !== 'lesson') return;
+    checking = true;
+    var L = OD_LESSONS[LS.cur];
+    if (curPane !== 'dersler') showPane('dersler');
+    $('lres').innerHTML = '<div class="big">Yoxlanılır…</div>';
+    odCheckLesson(L, code.value).then(function (r) {
       checking = false;
       if (r.ok) {
-        var first = !LS.passed[L.id];
-        LS.passed[L.id] = true; lsave();
-        renderLesson(r);
-        if (first) toast('+1 dərs ✅  (' + passedCount() + '/' + OD_LESSONS.length + ')');
+        var first = !LS.passed[L.id]; LS.passed[L.id] = true; lsave(); renderLesson(r);
+        if (first) toast('Dərs keçildi (' + passedCount() + '/' + OD_LESSONS.length + ')');
         if (first && passedCount() === OD_LESSONS.length) setTimeout(openCert, 700);
       } else {
-        LS.fails[L.id] = (LS.fails[L.id] || 0) + 1; lsave();
-        renderLesson(r);
-        var bad = r.results.filter(function(t){ return t.xəta && /Sətir (\d+)/.test(t.xəta); })[0];
+        LS.fails[L.id] = (LS.fails[L.id] || 0) + 1; lsave(); renderLesson(r);
+        var bad = r.results.filter(function (t) { return t.xəta && /Sətir (\d+)/.test(t.xəta); })[0];
         if (bad) { errLine = +/Sətir (\d+)/.exec(bad.xəta)[1]; highlight(); }
       }
-    }, function(e){ checking = false; $('lres').innerHTML = '<div class="tr bad">' + esc(String(e)) + '</div>'; });
+    }, function (e) { checking = false; $('lres').innerHTML = '<div class="tr bad">' + esc(String(e)) + '</div>'; });
   }
-  $('lessonsBtn').addEventListener('click', function(){ lessonsMode ? exitLessons() : enterLessons(); });
 
-  // Sertifikat
-  function drawCert(){
+  // ---- Sertifikat ----
+  function drawCert() {
     var c = $('certCv'), g = c.getContext('2d'), W2 = c.width, H2 = c.height;
+    var accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e8692c';
     var name = ($('certName').value || '').trim() || 'Adını yaz';
-    var grd = g.createLinearGradient(0, 0, W2, H2); grd.addColorStop(0, '#14100c'); grd.addColorStop(1, '#0b0d14');
-    g.fillStyle = grd; g.fillRect(0, 0, W2, H2);
-    g.strokeStyle = '#ff6a2b'; g.lineWidth = 6; g.strokeRect(40, 40, W2 - 80, H2 - 80);
-    g.strokeStyle = '#ffb02e66'; g.lineWidth = 2; g.strokeRect(62, 62, W2 - 124, H2 - 124);
+    g.fillStyle = '#fbfaf7'; g.fillRect(0, 0, W2, H2);
+    g.strokeStyle = accent; g.lineWidth = 10; g.strokeRect(50, 50, W2 - 100, H2 - 100);
+    g.strokeStyle = '#d9d4c7'; g.lineWidth = 2; g.strokeRect(78, 78, W2 - 156, H2 - 156);
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.font = '120px serif'; g.fillText('🔥', W2/2, 200);
-    g.fillStyle = '#ffb02e'; g.font = '800 34px Manrope, sans-serif'; g.fillText('S E R T İ F İ K A T', W2/2, 315);
-    g.fillStyle = '#e6e8ee'; g.font = '600 30px Manrope, sans-serif'; g.fillText('Bu sertifikat təsdiq edir ki,', W2/2, 410);
-    g.fillStyle = '#ffffff'; g.font = 'italic 700 86px Lora, Georgia, serif'; g.fillText(name, W2/2, 525);
-    g.fillStyle = '#ff6a2b'; g.fillRect(W2/2 - 260, 590, 520, 4);
-    g.fillStyle = '#c9cfdc'; g.font = '600 30px Manrope, sans-serif';
-    g.fillText('Od dilində «Proqramlaşdırmanın əsasları» kursunun', W2/2, 670);
-    g.fillText('bütün 10 dərsini uğurla bitirdi.', W2/2, 715);
-    var d = new Date(); var aylar = ['yanvar','fevral','mart','aprel','may','iyun','iyul','avqust','sentyabr','oktyabr','noyabr','dekabr'];
-    g.fillStyle = '#8a91a3'; g.font = '600 26px Manrope, sans-serif';
-    g.fillText(d.getDate() + ' ' + aylar[d.getMonth()] + ' ' + d.getFullYear(), W2/2 - 360, 900);
-    g.fillText('Od — Azərbaycan dilində proqramlaşdırma', W2/2 + 260, 900);
-    g.fillStyle = '#5b6274'; g.font = '600 22px Manrope, sans-serif'; g.fillText('sano8063.github.io/od', W2/2, 1000);
+    g.fillStyle = accent; g.beginPath(); g.roundRect ? g.roundRect(W2 / 2 - 48, 140, 96, 96, 18) : g.rect(W2 / 2 - 48, 140, 96, 96); g.fill();
+    g.fillStyle = '#fff'; g.font = '700 44px "JetBrains Mono", monospace'; g.fillText('od', W2 / 2, 190);
+    g.fillStyle = '#2b2b2b'; g.font = '700 30px Inter, sans-serif'; g.fillText('S E R T İ F İ K A T', W2 / 2, 300);
+    g.fillStyle = '#5c5c5c'; g.font = '500 28px Inter, sans-serif'; g.fillText('Bu sertifikat təsdiq edir ki,', W2 / 2, 400);
+    g.fillStyle = '#151515'; g.font = 'italic 700 84px Lora, Georgia, serif'; g.fillText(name, W2 / 2, 515);
+    g.fillStyle = accent; g.fillRect(W2 / 2 - 260, 580, 520, 3);
+    g.fillStyle = '#3d3d3d'; g.font = '500 28px Inter, sans-serif';
+    g.fillText('Od dilində «Proqramlaşdırmanın əsasları» kursunun', W2 / 2, 660);
+    g.fillText('bütün 10 dərsini uğurla bitirdi.', W2 / 2, 704);
+    var d = new Date(), aylar = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avqust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'];
+    g.fillStyle = '#6b6b6b'; g.font = '500 24px Inter, sans-serif';
+    g.fillText(d.getDate() + ' ' + aylar[d.getMonth()] + ' ' + d.getFullYear(), W2 / 2 - 380, 900);
+    g.fillText('Od — Azərbaycan dilində proqramlaşdırma', W2 / 2 + 250, 900);
+    g.fillStyle = '#9a9a9a'; g.font = '500 20px Inter, sans-serif'; g.fillText('sano8063.github.io/od', W2 / 2, 990);
   }
-  function openCert(){ $('cert').classList.add('on'); drawCert(); setTimeout(function(){ $('certName').focus(); }, 50); }
+  function openCert() { $('cert').classList.add('on'); drawCert(); setTimeout(function () { $('certName').focus(); }, 50); }
   $('certName').addEventListener('input', drawCert);
-  $('certClose').onclick = function(){ $('cert').classList.remove('on'); };
-  $('certSave').onclick = function(){
-    try {
-      var a = document.createElement('a'); a.download = 'od-sertifikat.png'; a.href = $('certCv').toDataURL('image/png');
-      document.body.appendChild(a); a.click(); a.remove();
-      toast('Sertifikat yükləndi 🏆');
-    } catch(e){ toast('Yükləmə alınmadı — şəklin üzərində sağ klik → "Şəkli yadda saxla"'); }
+  $('certClose').onclick = function () { $('cert').classList.remove('on'); };
+  $('certSave').onclick = function () {
+    try { var a = document.createElement('a'); a.download = 'od-sertifikat.png'; a.href = $('certCv').toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove(); toast('Sertifikat yükləndi'); }
+    catch (e) { toast('Yükləmə alınmadı — şəklin üzərində sağ klik → "Şəkli yadda saxla"'); }
   };
 
-  function routeHash(){
-    var h = location.hash.replace('#', '');
-    var m = /^ders-(\d+)$/.exec(h);
-    if (m) enterLessons(+m[1] - 1);
-    else if (h === 'dersler') enterLessons();
+  // ---- Mərkəz: müəllim paneli görünüşü ----
+  function showDash(html) { $('center').classList.add('dash'); var d = $('dashv'); d.innerHTML = html; applyIcons(d); d.scrollTop = 0; return d; }
+  function hideDash() { $('center').classList.remove('dash'); }
+
+  // ---- Marşrut ----
+  function routeHash() {
+    var h = location.hash.replace('#', ''), m = /^ders-(\d+)$/.exec(h);
+    if (m) { showPane('dersler'); openLesson(+m[1] - 1); }
+    else if (h === 'dersler') showPane('dersler');
+    else if (h === 'sinif') showPane('sinif');
   }
   window.addEventListener('hashchange', routeHash);
 
   // ---- Başlanğıc ----
-  code.value = load() || OD_EXAMPLES[0].kod;
+  applySettings();
+  renderKodPane(); renderAbcPane();
   resetTurtle();
-  highlight();
-  line('Salam! 👋 Bu, Od dilidir — Azərbaycan dilində proqramlaşdırma.', 'sys');
-  line('Soldakı kodu dəyiş və ▶ İşə sal düyməsini bas (və ya Ctrl+Enter).', 'sys');
-  line('Yuxarıdakı "Nümunələr" menyusunda oyun və rəsm proqramları var.', 'sys');
-  line('🔤 Dilin bütün hərflərini görmək üçün yuxarıdakı "Biz hərfləri qururuq" düyməsinə bas.', 'sys');
-  var seen = null; try { seen = localStorage.getItem('od-abc-seen'); } catch(e){}
-  if (/^#(dersler|ders-\d+)$/.test(location.hash)) { routeHash(); }
-  else if (!seen) openABC();
-  line('📘 Proqramlaşdırmanı sıfırdan öyrənmək üçün yuxarıdakı "Dərslər" düyməsinə bas.', 'sys');
+  freeContext();
+  line('Od-a xoş gəldin. Kodu yaz və "İşə sal" düyməsini bas (Ctrl+Enter).', 'sys');
+  line('Soldakı bölmələr: Kod · Dərslər · Sinif · Əlifba · Ayarlar.', 'sys');
+  if (matchMedia('(max-width:760px)').matches) { $('side').classList.add('closed'); markActs(null); }
+  if (location.hash) routeHash();
+
+  // Sinif modulu üçün açıq API
+  window.OdApp = {
+    $: $, esc: esc, icon: icon, applyIcons: applyIcons, toast: toast, store: store, fetchStore: fetchStore,
+    code: code, setContext: setContext, freeContext: freeContext, getContext: function () { return ctx; },
+    runProgram: runProgram, showPane: showPane, showDash: showDash, hideDash: hideDash,
+    openModal: openModal, closeModal: closeModal, highlightCode: highlightCode, showResults: showResults,
+    status: status, curPane: function () { return curPane; }
+  };
 })();
+
+</script>
+<script>
+// ===== Od Sinif — müəllim və şagird rolları, ev tapşırıqları, ciddi rejim =====
+(function () {
+  'use strict';
+  var A = window.OdApp, $ = A.$, esc = A.esc, icon = A.icon, toast = A.toast;
+  var cloud = OdCloud.create();
+  var user = null, booted = false, inbox = [], inboxSeen = null, unsubInbox = null;
+  var myClassesCache = [], mySubsCache = {};
+
+  function fmtDate(t) {
+    if (!t) return '—';
+    var d = new Date(t), aylar = ['yan', 'fev', 'mar', 'apr', 'may', 'iyn', 'iyl', 'avq', 'sen', 'okt', 'noy', 'dek'];
+    return d.getDate() + ' ' + aylar[d.getMonth()] + ', ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+  function fmtDur(ms) { var s = Math.round((ms || 0) / 1000), m = Math.floor(s / 60); return m ? m + ' dəq ' + (s % 60) + ' san' : s + ' san'; }
+  function initials(n) { return String(n || '?').trim().split(/\s+/).map(function (w) { return w[0]; }).join('').slice(0, 2).toUpperCase(); }
+  function fail(e) { toast(OdCloud.authMsg(e)); }
+  function roleName(r) { return r === 'muellim' ? 'Müəllim' : 'Şagird'; }
+
+  // ---------- Başlanğıc ----------
+  function boot() {
+    if (booted) return; booted = true;
+    $('sbCloud').innerHTML = icon('cloud') + (cloud.mode === 'firebase' ? 'Bulud: qoşulur…' : 'Demo rejim');
+    cloud.init().then(function () {
+      $('sbCloud').innerHTML = icon('cloud') + (cloud.mode === 'firebase' ? 'Bulud: onlayn' : 'Demo rejim');
+    }, function (e) {
+      // Firebase yüklənmədisə (məs. bağlı mühit) demo rejimə keç
+      cloud = OdCloud.create({ demo: true });
+      $('sbCloud').innerHTML = icon('cloud') + 'Demo rejim';
+      console.warn(e); cloud.onAuth(onAuth);
+    });
+    cloud.onAuth(onAuth);
+  }
+  function onAuth(u) {
+    user = u;
+    $('userAv').textContent = u ? initials(u.ad) : '?';
+    $('userName').textContent = u ? u.ad : 'Daxil ol';
+    if (unsubInbox) { unsubInbox(); unsubInbox = null; }
+    inbox = []; inboxSeen = null; updateBadges();
+    if (u && u.rol === 'muellim') unsubInbox = cloud.watchInbox(onInbox);
+    if (u && u.rol === 'sagird') refreshMySubs();
+    if (A.curPane() === 'sinif') render();
+    if (!u) A.hideDash();
+  }
+  function refreshMySubs() { return cloud.mySubmissions().then(function (l) { mySubsCache = {}; l.forEach(function (s) { mySubsCache[s.aid] = s; }); }, function () {}); }
+
+  // ---------- Bildirişlər (müəllim) ----------
+  function onInbox(list) {
+    var fresh = [];
+    if (inboxSeen) list.forEach(function (s) { var old = inboxSeen[s.id]; if (!old || old < s.göndərilib) fresh.push(s); });
+    inboxSeen = {}; list.forEach(function (s) { inboxSeen[s.id] = s.göndərilib; });
+    inbox = list; updateBadges();
+    fresh.forEach(function (s) { toast((s.şübhəli ? '⚠ Şübhəli göndəriş: ' : 'Yeni göndəriş: ') + s.studentName + ' — ' + s.başlıq); });
+    if ($('bellPop').classList.contains('on')) renderBell();
+    if (dashState && dashState.view === 'assignment') refreshDash();
+  }
+  function updateBadges() {
+    var n = inbox.filter(function (s) { return !s.oxundu; }).length;
+    [$('bellBadge'), $('actBadge')].forEach(function (b) { b.textContent = n > 9 ? '9+' : n; b.classList.toggle('on', n > 0); });
+  }
+  function renderBell() {
+    var pop = $('bellPop'), h = '<div class="ph">Bildirişlər<div class="spacer"></div>';
+    if (inbox.some(function (s) { return !s.oxundu; })) h += '<button class="btn sm ghost" id="readAll">Hamısını oxunmuş et</button>';
+    h += '</div>';
+    if (!user) h += '<div class="nitem muted">Bildirişləri görmək üçün daxil ol.</div>';
+    else if (user.rol !== 'muellim') h += '<div class="nitem muted">Şagird bildirişləri: tapşırıqların "Sinif" bölməsindədir.</div>';
+    else if (!inbox.length) h += '<div class="nitem muted">Hələ göndəriş yoxdur.</div>';
+    else inbox.slice(0, 30).forEach(function (s) {
+      h += '<div class="nitem' + (s.oxundu ? '' : ' unread') + '" data-sid="' + esc(s.id) + '">' +
+        (s.şübhəli ? '<span class="pill warn">' + icon('flag') + 'Şübhəli</span> ' : '') + '<b>' + esc(s.studentName) + '</b> göndərdi: ' + esc(s.başlıq) +
+        '<div class="muted" style="font-size:11.5px;margin-top:2px">' + fmtDate(s.göndərilib) + ' · ' + resultText(s) + '</div></div>';
+    });
+    pop.innerHTML = h; A.applyIcons(pop);
+    pop.querySelectorAll('[data-sid]').forEach(function (el) {
+      el.onclick = function () { pop.classList.remove('on'); var s = inbox.filter(function (x) { return x.id === el.dataset.sid; })[0]; if (s) openSubmission(s); };
+    });
+    if ($('readAll')) $('readAll').onclick = function () { inbox.filter(function (s) { return !s.oxundu; }).forEach(function (s) { cloud.updateSubmission(s.id, { oxundu: true }); s.oxundu = true; }); updateBadges(); renderBell(); };
+  }
+  $('bellBtn').onclick = function (e) { e.stopPropagation(); var p = $('bellPop'); p.classList.toggle('on'); if (p.classList.contains('on')) renderBell(); };
+  document.addEventListener('click', function (e) { if (!$('bellPop').contains(e.target)) $('bellPop').classList.remove('on'); });
+  function resultText(s) { var n = s.nəticə || {}; return n.cəmi ? n.keçən + '/' + n.cəmi + ' test' : 'testsiz'; }
+
+  // ---------- Hesab ----------
+  $('userBtn').onclick = function () { if (!user) openAuth('in'); else openAccount(); };
+  function openAuth(tab, role) {
+    var box = A.openModal(
+      '<div class="row"><h2>' + (tab === 'up' ? 'Qeydiyyat' : 'Daxil ol') + '</h2><div class="spacer"></div><button class="btn ghost" data-x>Bağla</button></div>' +
+      '<p class="muted" style="margin:4px 0 14px">' + (cloud.mode === 'demo' ? 'Demo rejim: hesablar yalnız bu brauzerdə saxlanılır.' : 'Od Sinif hesabı') + '</p>' +
+      '<div class="seg"><button data-tab="in"' + (tab !== 'up' ? ' class="on"' : '') + '>Daxil ol</button><button data-tab="up"' + (tab === 'up' ? ' class="on"' : '') + '>Qeydiyyat</button></div>' +
+      (tab === 'up' ? '<div class="field"><label>Rol</label><div class="seg" style="margin:0"><button data-role="sagird"' + (role !== 'muellim' ? ' class="on"' : '') + '>Şagird</button><button data-role="muellim"' + (role === 'muellim' ? ' class="on"' : '') + '>Müəllim</button></div></div>' +
+        '<div class="field"><label>Ad və soyad</label><input class="inp" id="aName" maxlength="40" autocomplete="name"></div>' : '') +
+      '<div class="field"><label>E-poçt</label><input class="inp" id="aMail" type="email" autocomplete="email"></div>' +
+      '<div class="field"><label>Şifrə' + (tab === 'up' ? ' (ən azı 6 simvol)' : '') + '</label><input class="inp" id="aPass" type="password" autocomplete="' + (tab === 'up' ? 'new-password' : 'current-password') + '"></div>' +
+      '<div class="notice" id="aErr" style="display:none"></div>' +
+      '<div class="row"><div class="spacer"></div><button class="btn primary" id="aGo">' + (tab === 'up' ? 'Hesab yarat' : 'Daxil ol') + '</button></div>');
+    var rol = role === 'muellim' ? 'muellim' : 'sagird';
+    box.querySelector('[data-x]').onclick = A.closeModal;
+    box.querySelectorAll('[data-tab]').forEach(function (b) { b.onclick = function () { openAuth(b.dataset.tab, rol); }; });
+    box.querySelectorAll('[data-role]').forEach(function (b) { b.onclick = function () { rol = b.dataset.role; box.querySelectorAll('[data-role]').forEach(function (x) { x.classList.toggle('on', x === b); }); }; });
+    function go() {
+      var e = $('aMail').value, p = $('aPass').value, btn = $('aGo');
+      btn.disabled = true;
+      var pr = tab === 'up' ? cloud.signUp(e, p, $('aName').value, rol) : cloud.signIn(e, p);
+      pr.then(function (u) { A.closeModal(); toast('Xoş gəldin, ' + u.ad + '!'); A.showPane('sinif'); },
+        function (er) { btn.disabled = false; var el = $('aErr'); el.style.display = 'block'; el.className = 'notice warn'; el.textContent = OdCloud.authMsg(er); });
+    }
+    $('aGo').onclick = go;
+    box.querySelectorAll('input').forEach(function (i) { i.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') go(); }); });
+  }
+  function openAccount() {
+    var box = A.openModal('<div class="row"><h2>' + esc(user.ad) + '</h2><div class="spacer"></div><button class="btn ghost" data-x>Bağla</button></div>' +
+      '<p class="muted" style="margin:4px 0 14px">' + roleName(user.rol) + ' · ' + esc(user.email || '') + '</p>' +
+      '<div class="notice">' + (cloud.mode === 'demo' ? 'Demo rejim: bütün məlumat bu brauzerdə saxlanılır. Server qoşulanda hesablar real olacaq.' : 'Bulud rejimi: məlumat Firebase serverində saxlanılır.') + '</div>' +
+      '<div class="row"><div class="spacer"></div><button class="btn danger" id="aOut" data-icon="logout">Çıxış</button></div>');
+    box.querySelector('[data-x]').onclick = A.closeModal;
+    $('aOut').onclick = function () { cloud.signOut().then(function () { A.closeModal(); A.freeContext(); toast('Hesabdan çıxdın'); }); };
+  }
+
+  // ---------- Sinif paneli (sol) ----------
+  function render() {
+    boot();
+    var p = $('pane-sinif');
+    if (!user) {
+      p.innerHTML = '<div class="sec"><h4>Od Sinif</h4><p class="phil">Müəllimlər sinif yaradır və ev tapşırığı verir. Şagirdlər sinif koduna qoşulur, tapşırığı Od-da yazıb göndərir. Kod avtomatik yoxlanılır və nəticə müəllimin panelinə düşür.</p>' +
+        '<div class="row" style="margin-top:12px"><button class="btn primary" id="sIn">Daxil ol</button><button class="btn" id="sUpT">Müəllim qeydiyyatı</button><button class="btn" id="sUpS">Şagird qeydiyyatı</button></div></div>' +
+        '<div class="sec"><h4>Ciddi rejim</h4><p class="phil">Müəllim tapşırıqda "ciddi rejim"i açanda kod yapışdırmaq, səhifədən çıxmaq və yazılış vaxtı qeydə alınır. Şübhəli göndərişlər müəllimə bildiriş kimi gəlir və o, yazılışı təkrar oynada bilir. Şagird bunu redaktorun üstündə açıq görür.</p></div>' +
+        (cloud.mode === 'demo' ? '<div class="sec"><div class="notice">Demo rejim: server qoşulmayıb, hesablar yalnız bu brauzerdə saxlanılır. Təqdimat üçün: müəllim kimi qeydiyyatdan keç, sinif yarat, sonra çıxıb şagird kimi daxil ol.</div></div>' : '');
+      $('sIn').onclick = function () { openAuth('in'); };
+      $('sUpT').onclick = function () { openAuth('up', 'muellim'); };
+      $('sUpS').onclick = function () { openAuth('up', 'sagird'); };
+      return;
+    }
+    if (user.rol === 'muellim') renderTeacherPane(p); else renderStudentPane(p);
+  }
+
+  function renderTeacherPane(p) {
+    p.innerHTML = '<div class="sec"><div class="row"><span class="avatar">' + esc(initials(user.ad)) + '</span><div><b>' + esc(user.ad) + '</b><div class="muted" style="font-size:12px">Müəllim</div></div></div>' +
+      '<div class="row" style="margin-top:12px"><button class="btn primary" id="tDash" data-icon="eye">Müəllim paneli</button><button class="btn" id="tNew" data-icon="plus">Yeni sinif</button></div></div>' +
+      '<div class="sec" style="padding:8px 0"><h4 style="padding:4px 14px">Siniflərim</h4><div class="list" id="tList"><div class="item muted">Yüklənir…</div></div></div>';
+    A.applyIcons(p);
+    $('tDash').onclick = function () { openDash({ view: 'home' }); };
+    $('tNew').onclick = newClassModal;
+    cloud.myClasses().then(function (l) {
+      myClassesCache = l;
+      $('tList').innerHTML = l.length ? l.map(function (c) { return '<button class="item" data-cid="' + esc(c.id) + '">' + icon('users') + esc(c.ad) + '<span class="meta mono">' + esc(c.kod) + '</span></button>'; }).join('')
+        : '<div class="item muted">Hələ sinif yoxdur.</div>';
+      $('tList').querySelectorAll('[data-cid]').forEach(function (b) { b.onclick = function () { openDash({ view: 'class', cid: b.dataset.cid }); }; });
+    }, fail);
+  }
+  function newClassModal() {
+    var box = A.openModal('<h2>Yeni sinif</h2><p class="muted" style="margin:4px 0 14px">Sinif yaradıldıqdan sonra şagirdlərə 6 simvollu qoşulma kodu verəcəksən.</p>' +
+      '<div class="field"><label>Sinfin adı</label><input class="inp" id="cName" placeholder="məs. 7A — İnformatika" maxlength="60"></div>' +
+      '<div class="row"><div class="spacer"></div><button class="btn ghost" data-x>Ləğv et</button><button class="btn primary" id="cGo">Yarat</button></div>');
+    box.querySelector('[data-x]').onclick = A.closeModal;
+    $('cGo').onclick = function () {
+      cloud.createClass($('cName').value).then(function (c) { A.closeModal(); toast('Sinif yaradıldı. Kod: ' + c.kod); render(); openDash({ view: 'class', cid: c.id }); }, fail);
+    };
+  }
+
+  function renderStudentPane(p) {
+    p.innerHTML = '<div class="sec"><div class="row"><span class="avatar">' + esc(initials(user.ad)) + '</span><div><b>' + esc(user.ad) + '</b><div class="muted" style="font-size:12px">Şagird</div></div></div>' +
+      '<div class="field" style="margin:12px 0 0"><label>Sinfə qoşul</label><div class="row"><input class="inp mono" id="jCode" placeholder="KOD" maxlength="6" style="text-transform:uppercase;letter-spacing:2px"><button class="btn primary" id="jGo">Qoşul</button></div></div></div>' +
+      '<div id="sClasses"><div class="sec muted">Yüklənir…</div></div>';
+    $('jGo').onclick = function () { cloud.joinClass($('jCode').value).then(function (c) { toast(c.ad + ' sinfinə qoşuldun'); render(); }, fail); };
+    $('jCode').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('jGo').click(); });
+    Promise.all([cloud.myClasses(), refreshMySubs()]).then(function (r) {
+      var classes = r[0];
+      if (!classes.length) { $('sClasses').innerHTML = '<div class="sec"><div class="empty">Hələ heç bir sinfə qoşulmamısan. Müəllimindən sinif kodunu soruş.</div></div>'; return; }
+      return Promise.all(classes.map(function (c) { return cloud.assignmentsForClass(c.id).then(function (as) { return { c: c, as: as }; }); })).then(function (rows) {
+        $('sClasses').innerHTML = rows.map(function (row) {
+          return '<div class="sec" style="padding:8px 0"><h4 style="padding:4px 14px">' + esc(row.c.ad) + ' · ' + esc(row.c.teacherName || '') + '</h4><div class="list">' +
+            (row.as.length ? row.as.map(function (a) {
+              var s = mySubsCache[a.id], st = !s ? '<span class="dotk"></span>' : '<span class="dotk ' + (s.nəticə && s.nəticə.ok ? 'ok' : (s.nəticə && s.nəticə.cəmi ? 'bad' : 'warn')) + '"></span>';
+              var late = a.son && !s && Date.now() > a.son;
+              return '<button class="item" data-aid="' + esc(a.id) + '">' + st + esc(a.başlıq) + (a.ciddi ? ' ' + icon('shield') : '') +
+                '<span class="meta">' + (s ? 'göndərilib' : late ? 'vaxtı keçib' : a.son ? 'son: ' + fmtDate(a.son) : '') + '</span></button>';
+            }).join('') : '<div class="item muted">Tapşırıq yoxdur</div>') + '</div></div>';
+        }).join('');
+        $('sClasses').querySelectorAll('[data-aid]').forEach(function (b) { b.onclick = function () { openAssignment(b.dataset.aid); }; });
+      });
+    }).catch(fail);
+  }
+
+  // ---------- Şagird: tapşırıq ----------
+  var curAssign = null;
+  function openAssignment(aid) {
+    cloud.getAssignment(aid).then(function (a) {
+      curAssign = a;
+      var draftKey = 'od-tap-' + aid, draft = A.fetchStore(draftKey);
+      A.setContext({
+        type: 'assignment', aid: aid, strict: !!a.ciddi, icon: 'send',
+        title: 'Tapşırıq — ' + a.başlıq, crumb: 'Sinif › ' + a.başlıq, mode: a.ciddi ? 'Tapşırıq · Ciddi rejim' : 'Tapşırıq',
+        save: function (v) { A.store(draftKey, v); },
+        tools: (a.testlər && a.testlər.length ? [{ label: 'Yoxla', icon: 'check', onClick: function () { checkAssign(false); } }] : [])
+          .concat([{ label: 'Göndər', icon: 'send', cls: 'primary', onClick: function () { checkAssign(true); } }])
+      }, draft != null ? draft : (a.başlanğıc || ''));
+      startTracker(a);
+      renderAssignPane();
+    }, fail);
+  }
+  function renderAssignPane(res) {
+    var a = curAssign, s = mySubsCache[a.id], p = $('pane-sinif');
+    var h = '<div class="sec"><button class="btn sm ghost" id="aBack" data-icon="back">Tapşırıqlar</button>' +
+      '<h2 style="margin:10px 0 4px;font-size:17px">' + esc(a.başlıq) + '</h2>' +
+      '<div class="row" style="flex-wrap:wrap">' + (a.ciddi ? '<span class="pill warn">' + icon('shield') + 'Ciddi rejim</span>' : '') +
+      (a.son ? '<span class="pill">' + icon('clock') + 'Son: ' + fmtDate(a.son) + '</span>' : '') +
+      (a.testlər && a.testlər.length ? '<span class="pill">' + a.testlər.length + ' test</span>' : '') + '</div>' +
+      '<div class="doc"><p style="white-space:pre-wrap">' + esc(a.təsvir || '') + '</p></div>' +
+      (a.ciddi ? '<div class="notice warn">Bu tapşırıq ciddi rejimdədir: kod yapışdırmaq, səhifədən çıxmaq və yazılış vaxtı müəllimə göstərilir. Kodu özün yaz.</div>' : '') +
+      '<div class="lbtns">' + (a.testlər && a.testlər.length ? '<button class="btn" id="aCheck" data-icon="check">Yoxla</button>' : '') +
+      '<button class="btn primary" id="aSend" data-icon="send">Göndər</button></div>' +
+      (s ? '<div class="notice">Son göndəriş: ' + fmtDate(s.göndərilib) + ' · ' + resultText(s) + (s.cəhd > 1 ? ' · ' + s.cəhd + '-ci cəhd' : '') +
+        (s.qiymət != null && s.qiymət !== '' ? '<br><b>Qiymət: ' + esc(s.qiymət) + '</b>' : '') + (s.şərh ? '<br>Müəllimin şərhi: ' + esc(s.şərh) : '') + '</div>' : '') +
+      '<div class="lres" id="aRes"></div></div>';
+    p.innerHTML = h; A.applyIcons(p);
+    $('aBack').onclick = function () { A.freeContext(); render(); };
+    if ($('aCheck')) $('aCheck').onclick = function () { checkAssign(false); };
+    $('aSend').onclick = function () { checkAssign(true); };
+    if (res) A.showResults($('aRes'), res);
+    if (A.curPane() !== 'sinif') A.showPane('sinif');
+  }
+  function checkAssign(send) {
+    var a = curAssign, ctx = A.getContext();
+    if (!a || !ctx || ctx.type !== 'assignment' || ctx.aid !== a.id) return;
+    var codeText = A.code.value;
+    var tests = (a.testlər || []).map(function (t) { return { girdi: t.girdi || [], gözlənilən: t.gözlənilən || '' }; });
+    var pr = tests.length ? odCheckLesson({ testlər: tests }, codeText) : Promise.resolve({ ok: true, results: [], mesaj: null });
+    if (A.curPane() !== 'sinif') A.showPane('sinif');
+    $('aRes').innerHTML = '<div class="big">' + (send ? 'Göndərilir…' : 'Yoxlanılır…') + '</div>';
+    pr.then(function (r) {
+      if (!send) { A.showResults($('aRes'), r); return; }
+      var sig = trackerSnapshot(a), integ = a.ciddi ? OdCloud.evaluateIntegrity(sig, (a.başlanğıc || '').length, codeText.length) : { şübhəli: false, səbəblər: [] };
+      var payload = {
+        kod: codeText, başlanğıc: a.başlanğıc || '', ciddi: !!a.ciddi,
+        nəticə: { ok: r.ok, keçən: r.results.filter(function (x) { return x.ok; }).length, cəmi: r.results.length,
+          testlər: r.results.map(function (x) { return { ok: x.ok, alınan: (x.alınan || '').slice(0, 400), xəta: x.xəta || '' }; }) },
+        siqnallar: { aktivMs: sig.aktivMs, çıxış: sig.çıxış, çıxışMs: sig.çıxışMs, yapışdırılan: sig.yapışdırılan, yapışdırmaSayı: sig.yapışdırma.length, düymə: sig.düymə, açılış: sig.açılış },
+        şübhəli: integ.şübhəli, səbəblər: integ.səbəblər,
+        opsJson: a.ciddi ? JSON.stringify(sig.ops.slice(0, 6000)) : ''
+      };
+      if (a.son && Date.now() > a.son) payload.gecikib = true;
+      return cloud.submit(a.id, payload).then(function (s) {
+        mySubsCache[a.id] = s; renderAssignPane(r);
+        toast(r.results.length ? 'Göndərildi: ' + payload.nəticə.keçən + '/' + payload.nəticə.cəmi + ' test keçdi' : 'Göndərildi');
+      });
+    }).catch(function (e) { $('aRes').innerHTML = '<div class="tr bad">' + esc(OdCloud.authMsg(e)) + '</div>'; });
+  }
+
+  // ---------- Ciddi rejim: izləyici ----------
+  var TR = null, lastText = '', leaveAt = null, trTimer = null;
+  function trKey(aid) { return 'od-iz-' + aid; }
+  function trActive() { var c = A.getContext(); return TR && c && c.type === 'assignment' && c.aid === TR.aid; }
+  function startTracker(a) {
+    var saved = A.fetchStore(trKey(a.id), true);
+    TR = saved && saved.aid === a.id ? saved : { aid: a.id, strict: !!a.ciddi, aktivMs: 0, çıxış: 0, çıxışMs: 0, yapışdırma: [], yapışdırılan: 0, düymə: 0, ops: [], açılış: 0, t0: Date.now(), base: a.başlanğıc || '', elapsed: 0 };
+    TR.strict = !!a.ciddi; TR.açılış++;
+    lastText = A.code.value;
+    if (TR.strict) {
+      var replayed = OdCloud.replayAt(TR.base, TR.ops, TR.ops.length);
+      if (replayed !== lastText) { var op = OdCloud.diffOp(replayed, lastText, TR.elapsed); if (op) { op.push('y'); TR.ops.push(op); } }
+    }
+    persistTracker();
+    if (!trTimer) trTimer = setInterval(function () {
+      if (!trActive()) return;
+      if (document.visibilityState === 'visible' && document.hasFocus()) { TR.aktivMs += 1000; TR.elapsed += 1000; }
+      persistTracker();
+    }, 1000);
+  }
+  function persistTracker() { if (TR) A.store(trKey(TR.aid), TR); }
+  function trackerSnapshot(a) {
+    if (!TR || TR.aid !== a.id) return { aktivMs: 0, çıxış: 0, çıxışMs: 0, yapışdırma: [], yapışdırılan: 0, düymə: 0, ops: [], açılış: 1 };
+    return TR;
+  }
+  var pasteFlag = false;
+  A.code.addEventListener('paste', function (e) {
+    if (!trActive() || !TR.strict) return;
+    var t = (e.clipboardData || window.clipboardData).getData('text') || '';
+    TR.yapışdırma.push([TR.elapsed, t.length]); TR.yapışdırılan += t.length; pasteFlag = true;
+  });
+  A.code.addEventListener('keydown', function (e) {
+    if (!trActive() || !TR.strict || e.ctrlKey || e.metaKey) return;
+    if (e.key.length === 1 || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'Tab' || e.key === 'Delete') TR.düymə++;
+  });
+  A.code.addEventListener('input', function () {
+    if (!trActive() || !TR.strict) { lastText = A.code.value; return; }
+    var op = OdCloud.diffOp(lastText, A.code.value, TR.elapsed);
+    if (op && TR.ops.length < 6000) { if (pasteFlag) op.push('p'); TR.ops.push(op); }
+    pasteFlag = false; lastText = A.code.value;
+  });
+  function leave() { if (trActive() && TR.strict && leaveAt == null) leaveAt = Date.now(); }
+  function back() {
+    if (leaveAt != null && trActive()) { var dt = Date.now() - leaveAt; if (dt > 800) { TR.çıxış++; TR.çıxışMs += dt; persistTracker(); } }
+    leaveAt = null;
+  }
+  document.addEventListener('visibilitychange', function () { document.visibilityState === 'hidden' ? leave() : back(); });
+  window.addEventListener('blur', leave);
+  window.addEventListener('focus', back);
+
+  // ---------- Müəllim paneli (mərkəz) ----------
+  var dashState = null;
+  function openDash(st) { dashState = st; if (A.curPane() !== 'sinif') A.showPane('sinif'); refreshDash(); }
+  function refreshDash() {
+    if (!dashState || !user || user.rol !== 'muellim') return;
+    var v = dashState.view;
+    if (v === 'home') dashHome(); else if (v === 'class') dashClass(dashState.cid); else if (v === 'assignment') dashAssignment(dashState.aid);
+  }
+  function dashHeader(title, back, extra) {
+    return '<div class="dash-h">' + (back ? '<button class="btn sm ghost" id="dBack" data-icon="back">' + esc(back) + '</button>' : '') +
+      '<h2>' + title + '</h2><div class="spacer"></div>' + (extra || '') + '<button class="btn sm" id="dClose">Redaktora qayıt</button></div>';
+  }
+  function bindHeader(backFn) {
+    $('dClose').onclick = function () { dashState = null; A.hideDash(); };
+    if ($('dBack')) $('dBack').onclick = backFn;
+  }
+  function dashHome() {
+    var flagged = inbox.filter(function (s) { return s.şübhəli; }), unread = inbox.filter(function (s) { return !s.oxundu; });
+    A.showDash(dashHeader('Müəllim paneli', null, '<button class="btn sm primary" id="dNewC" data-icon="plus">Yeni sinif</button>') +
+      '<div class="dash-b"><div class="cards" id="dStats"></div><h3 style="margin:22px 0 10px;font-size:14px">Siniflər</h3><div class="cards" id="dClasses"><div class="empty">Yüklənir…</div></div>' +
+      '<h3 style="margin:22px 0 10px;font-size:14px">Son göndərişlər</h3><div id="dRecent"></div></div>');
+    bindHeader(); $('dNewC').onclick = newClassModal;
+    $('dStats').innerHTML = statCard('Göndərişlər', inbox.length) + statCard('Oxunmamış', unread.length) + statCard('Şübhəli', flagged.length, flagged.length ? 'var(--warn)' : '');
+    cloud.myClasses().then(function (l) {
+      $('dClasses').innerHTML = l.length ? l.map(function (c) {
+        return '<div class="card" style="cursor:pointer" data-cid="' + esc(c.id) + '"><h3>' + esc(c.ad) + '</h3><div class="muted" style="font-size:12px">Qoşulma kodu</div><div class="kod">' + esc(c.kod) + '</div></div>';
+      }).join('') : '<div class="empty">Hələ sinif yoxdur. "Yeni sinif" düyməsi ilə başla.</div>';
+      $('dClasses').querySelectorAll('[data-cid]').forEach(function (el) { el.onclick = function () { openDash({ view: 'class', cid: el.dataset.cid }); }; });
+    }, fail);
+    $('dRecent').innerHTML = subsTable(inbox.slice(0, 15), true);
+    bindSubRows($('dRecent'), inbox);
+  }
+  function statCard(t, n, color) { return '<div class="card"><div class="muted" style="font-size:12px">' + t + '</div><div class="stat"' + (color ? ' style="color:' + color + '"' : '') + '>' + n + '</div></div>'; }
+  function dashClass(cid) {
+    var c = myClassesCache.filter(function (x) { return x.id === cid; })[0];
+    var go = c ? Promise.resolve(c) : cloud.myClasses().then(function (l) { myClassesCache = l; return l.filter(function (x) { return x.id === cid; })[0]; });
+    go.then(function (c) {
+      if (!c) { toast('Sinif tapılmadı'); return; }
+      A.showDash(dashHeader(esc(c.ad), 'Panel', '<button class="btn sm primary" id="dNewA" data-icon="plus">Yeni tapşırıq</button>') +
+        '<div class="dash-b"><div class="grid2"><div><h3 style="margin:0 0 10px;font-size:14px">Tapşırıqlar</h3><div id="dAs"><div class="empty">Yüklənir…</div></div></div>' +
+        '<div><div class="card"><div class="muted" style="font-size:12px">Şagirdlər bu kodla qoşulur</div><div class="kod" style="font-size:26px">' + esc(c.kod) + '</div>' +
+        '<button class="btn sm" id="dCopyK" data-icon="copy" style="margin-top:8px">Kodu kopyala</button></div>' +
+        '<h3 style="margin:18px 0 10px;font-size:14px">Şagirdlər</h3><div id="dMem"><div class="empty">Yüklənir…</div></div></div></div></div>');
+      bindHeader(function () { openDash({ view: 'home' }); });
+      $('dNewA').onclick = function () { assignmentModal(c); };
+      $('dCopyK').onclick = function () { try { navigator.clipboard.writeText(c.kod).then(function () { toast('Kod kopyalandı: ' + c.kod); }); } catch (e) { toast(c.kod); } };
+      cloud.classMembers(cid).then(function (m) {
+        $('dMem').innerHTML = m.length ? '<table class="t"><tr><th>Ad</th><th>Qoşulub</th></tr>' + m.map(function (x) { return '<tr><td>' + esc(x.ad) + '</td><td class="muted">' + fmtDate(x.qoşulub) + '</td></tr>'; }).join('') + '</table>'
+          : '<div class="empty">Hələ şagird yoxdur. Kodu şagirdlərə ver.</div>';
+      }, fail);
+      cloud.assignmentsForClass(cid).then(function (as) {
+        $('dAs').innerHTML = as.length ? '<table class="t"><tr><th>Tapşırıq</th><th>Göndəriş</th><th>Son tarix</th></tr>' + as.map(function (a) {
+          var subs = inbox.filter(function (s) { return s.aid === a.id; }), fl = subs.filter(function (s) { return s.şübhəli; }).length;
+          return '<tr class="click" data-aid="' + esc(a.id) + '"><td><b>' + esc(a.başlıq) + '</b>' + (a.ciddi ? ' <span class="pill warn">' + icon('shield') + 'Ciddi</span>' : '') +
+            '</td><td>' + subs.length + (fl ? ' <span class="pill warn">' + fl + ' şübhəli</span>' : '') + '</td><td class="muted">' + (a.son ? fmtDate(a.son) : '—') + '</td></tr>';
+        }).join('') + '</table>' : '<div class="empty">Hələ tapşırıq yoxdur.</div>';
+        A.applyIcons($('dAs'));
+        $('dAs').querySelectorAll('[data-aid]').forEach(function (r) { r.onclick = function () { openDash({ view: 'assignment', aid: r.dataset.aid, cid: cid }); }; });
+      }, fail);
+    }, fail);
+  }
+  function dashAssignment(aid) {
+    Promise.all([cloud.getAssignment(aid), cloud.submissionsForAssignment(aid), cloud.classMembers(dashState.cid || '')]).then(function (r) {
+      var a = r[0], subs = r[1].sort(function (x, y) { return y.göndərilib - x.göndərilib; }), mem = r[2] || [];
+      var pending = mem.filter(function (m) { return !subs.some(function (s) { return s.studentId === m.uid; }); });
+      A.showDash(dashHeader(esc(a.başlıq), 'Sinif', '<button class="btn sm danger" id="dDelA">Tapşırığı sil</button>') +
+        '<div class="dash-b"><div class="row" style="flex-wrap:wrap;margin-bottom:12px">' + (a.ciddi ? '<span class="pill warn">' + icon('shield') + 'Ciddi rejim</span>' : '') +
+        (a.son ? '<span class="pill">' + icon('clock') + 'Son: ' + fmtDate(a.son) + '</span>' : '') + '<span class="pill">' + (a.testlər || []).length + ' test</span>' +
+        '<span class="pill">' + subs.length + ' göndəriş</span>' + (pending.length ? '<span class="pill">' + pending.length + ' gözlənilir</span>' : '') + '</div>' +
+        '<div class="card" style="margin-bottom:16px"><div style="white-space:pre-wrap">' + esc(a.təsvir || '') + '</div></div>' +
+        subsTable(subs, false) +
+        (pending.length ? '<p class="muted" style="margin-top:12px">Göndərməyənlər: ' + pending.map(function (m) { return esc(m.ad); }).join(', ') + '</p>' : '') + '</div>');
+      bindHeader(function () { openDash({ view: 'class', cid: a.classId }); });
+      bindSubRows($('dashv'), subs);
+      $('dDelA').onclick = function () {
+        if ($('dDelA').dataset.sure !== '1') { $('dDelA').dataset.sure = '1'; $('dDelA').textContent = 'Əminsən? Yenidən bas'; return; }
+        cloud.deleteAssignment(aid).then(function () { toast('Tapşırıq silindi'); openDash({ view: 'class', cid: a.classId }); }, fail);
+      };
+    }, fail);
+  }
+  function subsTable(subs, showTask) {
+    if (!subs.length) return '<div class="empty">Hələ göndəriş yoxdur.</div>';
+    return '<table class="t"><tr><th>Şagird</th>' + (showTask ? '<th>Tapşırıq</th>' : '') + '<th>Testlər</th><th>Ciddi rejim</th><th>Vaxt</th><th>Göndərilib</th></tr>' + subs.map(function (s) {
+      var n = s.nəticə || {}, sig = s.siqnallar || {};
+      var res = n.cəmi ? '<span class="pill ' + (n.ok ? 'ok' : 'bad') + '">' + n.keçən + '/' + n.cəmi + '</span>' : '<span class="pill">testsiz</span>';
+      var integ = !s.ciddi ? '<span class="muted">—</span>' : s.şübhəli ? '<span class="pill warn">' + icon('flag') + 'Şübhəli</span>' : '<span class="pill ok">Təmiz</span>';
+      return '<tr class="click" data-sid="' + esc(s.id) + '"><td>' + (s.oxundu ? '' : '<span class="dotk" style="display:inline-block;background:var(--accent);margin-right:6px"></span>') + '<b>' + esc(s.studentName) + '</b></td>' +
+        (showTask ? '<td>' + esc(s.başlıq) + '</td>' : '') + '<td>' + res + '</td><td>' + integ + '</td><td class="muted">' + fmtDur(sig.aktivMs) + '</td><td class="muted">' + fmtDate(s.göndərilib) + (s.gecikib ? ' <span class="pill bad">gecikib</span>' : '') + '</td></tr>';
+    }).join('') + '</table>';
+  }
+  function bindSubRows(root, list) {
+    A.applyIcons(root);
+    root.querySelectorAll('tr[data-sid]').forEach(function (r) { r.onclick = function () { var s = list.filter(function (x) { return x.id === r.dataset.sid; })[0]; if (s) openSubmission(s); }; });
+  }
+
+  // Göndərişə baxış + təkrar oynatma
+  function openSubmission(s) {
+    if (!user || user.rol !== 'muellim') return;
+    if (!s.oxundu) { cloud.updateSubmission(s.id, { oxundu: true }).catch(function () {}); s.oxundu = true; updateBadges(); }
+    dashState = { view: 'submission', sid: s.id, cid: s.classId, aid: s.aid };
+    if (A.curPane() !== 'sinif') A.showPane('sinif');
+    var n = s.nəticə || {}, sig = s.siqnallar || {}, ops = [];
+    try { ops = s.opsJson ? JSON.parse(s.opsJson) : []; } catch (e) {}
+    var h = dashHeader(esc(s.studentName) + ' — ' + esc(s.başlıq), 'Tapşırıq');
+    h += '<div class="dash-b"><div class="grid2"><div>';
+    h += '<div class="row" style="margin-bottom:8px"><b>Göndərilən kod</b><div class="spacer"></div><button class="btn sm" id="sRun" data-icon="play">Redaktorda aç</button></div>';
+    h += '<pre class="codebig" id="sCode">' + A.highlightCode(s.kod || '') + '</pre>';
+    if (s.ciddi && ops.length) {
+      h += '<h3 style="margin:18px 0 6px;font-size:14px">Yazılışın təkrarı</h3><div class="muted" style="font-size:12px">Şagirdin kodu necə yazdığını addım-addım izlə. Narıncı nişan — yapışdırılan hissə.</div>' +
+        '<div class="replay"><button class="btn sm" id="rPlay" data-icon="play">Oynat</button><input type="range" id="rSlider" min="0" max="' + ops.length + '" value="' + ops.length + '"><span class="mono muted" id="rTime" style="font-size:12px;min-width:90px"></span></div>' +
+        '<pre class="codebig" id="rView"></pre>';
+    }
+    h += '</div><div>';
+    h += '<div class="card" style="margin-bottom:12px"><h3>Nəticə</h3>' + (n.cəmi ? '<div class="stat" style="color:' + (n.ok ? 'var(--ok)' : 'var(--bad)') + '">' + n.keçən + ' / ' + n.cəmi + ' test</div>' : '<div class="muted">Bu tapşırıqda avtomatik test yoxdur.</div>') +
+      (n.testlər || []).map(function (t, i) { return '<div class="tr ' + (t.ok ? 'ok' : 'bad') + '"><div><b>Test ' + (i + 1) + '</b>' + (t.ok ? ' <small>· keçdi</small>' : '<pre>' + esc(t.xəta || ('Nəticə: ' + (t.alınan || '(heç nə)'))) + '</pre>') + '</div></div>'; }).join('') +
+      '<div class="muted" style="font-size:12px;margin-top:8px">' + fmtDate(s.göndərilib) + ' · ' + (s.cəhd || 1) + '-ci cəhd' + (s.gecikib ? ' · gecikib' : '') + '</div></div>';
+    if (s.ciddi) {
+      h += '<div class="card" style="margin-bottom:12px"><h3>Ciddi rejim siqnalları</h3>' +
+        (s.şübhəli ? '<div class="notice warn" style="margin-top:6px"><b>Diqqət tələb edir:</b><br>' + (s.səbəblər || []).map(esc).join('<br>') + '</div>' : '<div class="notice" style="margin-top:6px">Şübhəli siqnal yoxdur.</div>') +
+        '<table class="t" style="margin-top:8px"><tr><td>Aktiv işləmə vaxtı</td><td>' + fmtDur(sig.aktivMs) + '</td></tr><tr><td>Səhifədən çıxma</td><td>' + (sig.çıxış || 0) + ' dəfə, ' + fmtDur(sig.çıxışMs) + '</td></tr>' +
+        '<tr><td>Yapışdırma</td><td>' + (sig.yapışdırmaSayı || 0) + ' dəfə, ' + (sig.yapışdırılan || 0) + ' simvol</td></tr><tr><td>Düymə basma</td><td>' + (sig.düymə || 0) + '</td></tr>' +
+        '<tr><td>Tapşırığı açma sayı</td><td>' + (sig.açılış || 1) + '</td></tr></table>' +
+        '<p class="muted" style="font-size:12px;margin:8px 0 0">Siqnallar sübut deyil, yalnız diqqət üçündür. Qərarı şagirdlə danışdıqdan sonra ver.</p></div>';
+    }
+    h += '<div class="card"><h3>Qiymət və şərh</h3><div class="field"><label>Qiymət</label><input class="inp" id="gVal" maxlength="10" value="' + esc(s.qiymət == null ? '' : s.qiymət) + '" placeholder="məs. 5 və ya 95"></div>' +
+      '<div class="field"><label>Şərh (şagird görəcək)</label><textarea class="inp" id="gCom" rows="3" maxlength="500">' + esc(s.şərh || '') + '</textarea></div>' +
+      '<div class="row"><div class="spacer"></div><button class="btn primary" id="gSave">Yadda saxla</button></div></div>';
+    h += '</div></div></div>';
+    A.showDash(h);
+    bindHeader(function () { openDash({ view: 'assignment', aid: s.aid, cid: s.classId }); });
+    $('sRun').onclick = function () {
+      A.hideDash(); dashState = null;
+      A.setContext({ type: 'review', title: s.studentName + ' — ' + s.başlıq + ' (yalnız oxumaq)', crumb: 'Baxış', mode: 'Göndərişə baxış', icon: 'eye', readOnly: true,
+        tools: [{ label: 'Panelə qayıt', icon: 'back', onClick: function () { openSubmission(s); } }] }, s.kod || '');
+      A.runProgram();
+    };
+    $('gSave').onclick = function () {
+      var f = { qiymət: $('gVal').value.trim(), şərh: $('gCom').value.trim() };
+      cloud.updateSubmission(s.id, f).then(function () { s.qiymət = f.qiymət; s.şərh = f.şərh; toast('Qiymət yadda saxlandı'); }, fail);
+    };
+    if ($('rSlider')) {
+      var sl = $('rSlider'), view = $('rView'), timer = null;
+      var draw = function () {
+        var i = +sl.value, txt = OdCloud.replayAt(s.başlanğıc || '', ops, i), op = ops[Math.max(0, i - 1)];
+        view.innerHTML = A.highlightCode(txt) + (op && op[4] === 'p' ? '\n\n<span class="pill warn">yapışdırma: ' + (op[3] || '').length + ' simvol</span>' : '');
+        var t = op ? op[0] : 0; $('rTime').textContent = i + '/' + ops.length + ' · ' + fmtDur(t);
+      };
+      sl.oninput = draw; draw();
+      $('rPlay').onclick = function () {
+        if (timer) { clearInterval(timer); timer = null; $('rPlay').lastChild.textContent = 'Oynat'; return; }
+        if (+sl.value >= ops.length) sl.value = 0;
+        $('rPlay').lastChild.textContent = 'Dayandır';
+        timer = setInterval(function () { if (+sl.value >= ops.length || !document.body.contains(sl)) { clearInterval(timer); timer = null; if ($('rPlay')) $('rPlay').lastChild.textContent = 'Oynat'; return; } sl.value = +sl.value + 1; draw(); }, 60);
+      };
+    }
+  }
+
+  // Yeni tapşırıq
+  function assignmentModal(c) {
+    var box = A.openModal('<div class="row"><h2>Yeni tapşırıq · ' + esc(c.ad) + '</h2><div class="spacer"></div><button class="btn ghost" data-x>Bağla</button></div>' +
+      '<div class="grid2" style="margin-top:14px"><div>' +
+      '<div class="field"><label>Başlıq</label><input class="inp" id="nT" maxlength="80" placeholder="məs. Cüt ədədlər"></div>' +
+      '<div class="field"><label>Təsvir (şagird görəcək)</label><textarea class="inp" id="nD" rows="5" maxlength="2000" placeholder="Tapşırığı izah et..."></textarea></div>' +
+      '<div class="field"><label>Başlanğıc kod (istəyə görə)</label><textarea class="inp mono" id="nS" rows="5" spellcheck="false" placeholder="n = daxil_et(&quot;N:&quot;)"></textarea></div>' +
+      '</div><div>' +
+      '<div class="field"><label>Avtomatik testlər</label><div class="muted" style="font-size:12px;margin-bottom:6px">Hər test: girdilər (hər sətirdə bir) və gözlənilən nəticə. Boş saxlasan, tapşırığı özün yoxlayacaqsan.</div><div id="nTests"></div>' +
+      '<button class="btn sm" id="nAdd" data-icon="plus">Test əlavə et</button></div>' +
+      '<div class="field"><label>Son tarix (istəyə görə)</label><input class="inp" id="nDue" type="datetime-local"></div>' +
+      '<label class="switch"><span><b>Ciddi rejim</b><br><span class="muted" style="font-size:12px">Yapışdırma, səhifədən çıxma, yazılış vaxtı qeydə alınır; şübhəli göndərişlər sənə bildiriş kimi gəlir.</span></span><input type="checkbox" id="nStrict"></label>' +
+      '</div></div><div class="notice warn" id="nErr" style="display:none"></div>' +
+      '<div class="row" style="margin-top:12px"><div class="spacer"></div><button class="btn ghost" data-x>Ləğv et</button><button class="btn primary" id="nGo">Tapşırığı ver</button></div>', true);
+    box.querySelectorAll('[data-x]').forEach(function (b) { b.onclick = A.closeModal; });
+    function addRow(inp, exp) {
+      var d = document.createElement('div'); d.className = 'testrow';
+      d.innerHTML = '<textarea class="inp mono" rows="2" placeholder="Girdilər">' + esc(inp || '') + '</textarea><textarea class="inp mono" rows="2" placeholder="Gözlənilən nəticə">' + esc(exp || '') + '</textarea><button class="btn sm ghost" title="Sil">✕</button>';
+      d.querySelector('button').onclick = function () { d.remove(); };
+      $('nTests').appendChild(d);
+    }
+    addRow();
+    $('nAdd').onclick = function () { addRow(); };
+    $('nGo').onclick = function () {
+      var tests = [];
+      $('nTests').querySelectorAll('.testrow').forEach(function (r) {
+        var t = r.querySelectorAll('textarea'), inp = t[0].value.replace(/\r/g, ''), exp = t[1].value.replace(/\r/g, '').replace(/\s+$/, '');
+        if (!inp.trim() && !exp.trim()) return;
+        tests.push({ girdi: inp.trim() ? inp.split('\n') : [], gözlənilən: exp });
+      });
+      var due = $('nDue').value ? new Date($('nDue').value).getTime() : null;
+      var data = { classId: c.id, başlıq: $('nT').value.trim(), təsvir: $('nD').value, başlanğıc: $('nS').value, testlər: tests, son: due, ciddi: $('nStrict').checked };
+      cloud.createAssignment(data).then(function () { A.closeModal(); toast('Tapşırıq verildi'); openDash({ view: 'class', cid: c.id }); },
+        function (e) { var el = $('nErr'); el.style.display = 'block'; el.textContent = OdCloud.authMsg(e); });
+    };
+  }
+
+  window.OdClassroom = { render: render, cloud: function () { return cloud; } };
+  boot();
+})();
+
 </script>
 </body>
 </html>
